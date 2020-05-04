@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">Scanner</string>
+
+    <string name="title_activity_splash_activity">splash_activity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+
+    <string name="title_activity_fullscreen">FullscreenActivity</string>
+
+    <string name="mainactivitytitle">Microwave Detection App</string>
+
+    <string name="all_button_text">Sum</string>
+    <string name="bluetooth_button_text">Bluetooth</string>
+    <string name="network_button_text">Network</string>
+    <string name="wifi_button_text">Wifi</string>
+
+    <string name="home_button_text">Home</string>
+
+    <string name="splash_text">
+        <font fgcolor='#000000'>This app finds and displays signal strength information from Bluetooth, Cellular, Wifi networks that you phone can see.
+        \nBehind the scenes network settings are accessed and altered -</font>
+        <font fgcolor='#ff0000'> therefore only use this app at your own risk and after understanding app notes below. \n</font>
+        <font fgcolor='#000000'> \nApp Notes:
+        \n-During scanning, bluetooth is turned on; after scanning bluetooth is turned off.</font>
+        <font fgcolor='#ff0000'> This app will therefore disconnect bluetooth devices;</font>
+        <font fgcolor='#000000'>additionally, only "discoverable" Bluetooth devices are found.</font>
+        <font fgcolor='#000000'>\n-Scanning only finds Cell networks linked to your SIM and therefore represents a fraction of true sum signal.
+        \n-During Wifi scanning, Wifi is repeatedly turned on and off to help get results quicker.</font>
+        <font fgcolor='#ff0000'>THIS WILL INTERRUPT ANY WIFI ACTIVITIES DURING TIME OF USE.</font>
+        <font fgcolor='#000000'>\n-All signal strengths are</font>
+        <font fgcolor='#ff0000'>estimated and inaccurate.</font>
+        <font fgcolor='#000000'>\n-This app only works on newer phones.</font></string>
+
+</resources>

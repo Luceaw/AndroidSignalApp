@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/repeat_background"
+    tools:context=".MainActivity">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/layouttop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.08" />
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/layoutbottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="1" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/titleright"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.8" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/titleleft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.2" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:autoSizeMaxTextSize="100sp"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeTextType="uniform"
+        android:background="@color/black_overlay"
+        android:text="Networking Signal Detector App"
+        android:textAlignment="center"
+        android:textColor="@color/shockinglypurple"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/layouttop"
+        app:layout_constraintEnd_toStartOf="@+id/titleright"
+        app:layout_constraintStart_toStartOf="@+id/titleleft"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:weightSum="8"
+        app:layout_constraintBottom_toTopOf="@id/layoutbottom"
+        app:layout_constraintTop_toTopOf="@id/layouttop"
+
+        >
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="3"
+            android:contentDescription="Logo"
+            android:src="@drawable/exampleicon" />
+
+
+        <Button
+            android:id="@+id/all_button"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:autoSizeMaxTextSize="100sp"
+            android:autoSizeMinTextSize="7sp"
+            android:autoSizeTextType="uniform"
+            android:background="@color/trueBlack"
+            android:onClick="goAll"
+            android:text="Display Sum Signal Per Type of Below"
+            android:textAllCaps="false"
+            android:textColor="@color/blue_100" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.05" />
+
+        <Button
+            android:id="@+id/bluetooth_button"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:autoSizeMaxTextSize="100sp"
+            android:autoSizeMinTextSize="12sp"
+            android:autoSizeTextType="uniform"
+            android:background="@color/bluetoothcol"
+            android:lines="3"
+            android:onClick="goBluetooth"
+            android:text="Scan for Discoverable Bluetooth Devices"
+            android:textAllCaps="false" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.05" />
+
+        <Button
+            android:id="@+id/network_button"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:autoSizeMaxTextSize="100sp"
+            android:autoSizeMinTextSize="12sp"
+            android:autoSizeTextType="uniform"
+            android:background="@color/networkcol"
+
+            android:onClick="goNetwork"
+            android:text="Scan for Cellular Signals (Carrier Limited!)"
+            android:textAllCaps="false"
+
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.05" />
+
+        <Button
+            android:id="@+id/wifi_button"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:autoSizeMaxTextSize="100sp"
+            android:autoSizeMinTextSize="12sp"
+            android:autoSizeTextType="uniform"
+            android:background="@color/wificol"
+
+            android:onClick="goWifi"
+            android:text="Scan for Discoverable Wifi Devices"
+            android:textAllCaps="false"
+
+            />
+
+    </LinearLayout>
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

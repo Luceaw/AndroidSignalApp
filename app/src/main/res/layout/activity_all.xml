@@ -1,0 +1,465 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/trueBlack"
+    tools:context=".AllActivity">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.91" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineBtnTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.84" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/switchtop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.75" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/switchbottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.82" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineleft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.03" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/typeHeaderRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.23" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.94" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.98" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.02" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineTitleBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.1" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineheaderRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.97" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineheaderLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.84" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.12" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineHeaderbottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.17" />
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineboxstart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.19" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/SignalHeaderRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.8" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/SignalHeaderLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.26" />
+
+
+    <TextView
+        android:id="@+id/editText"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:autoSizeMaxTextSize="100sp"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeTextType="uniform"
+        android:gravity="center"
+        android:lines="2"
+        android:text="Scan all default networking \n Note: Bluetooth is turned on!"
+        android:textColor="@color/red_700"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineTitleBottom"
+        app:layout_constraintTop_toTopOf="@+id/guidelineTitle" />
+
+
+    <TextView
+        android:id="@+id/timeHeader"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:autoSizeMaxTextSize="100sp"
+        android:autoSizeMinTextSize="8sp"
+        android:autoSizeTextType="uniform"
+        android:gravity="center"
+
+        android:lines="2"
+        android:text="Results' Age"
+        android:textColor="@color/red_700"
+
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineHeaderbottom"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineheaderRight"
+        app:layout_constraintStart_toStartOf="@+id/guidelineheaderLeft"
+        app:layout_constraintTop_toTopOf="@+id/guidelineHeader" />
+
+
+    <TextView
+        android:id="@+id/signalHeader"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:autoSizeMaxTextSize="100sp"
+        android:autoSizeMinTextSize="8sp"
+        android:autoSizeTextType="uniform"
+        android:gravity="center"
+        android:lines="2"
+        android:text="Total Signal / \n Approx Power"
+        android:textColor="@color/red_700"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineHeaderbottom"
+        app:layout_constraintEnd_toStartOf="@+id/SignalHeaderRight"
+        app:layout_constraintStart_toStartOf="@+id/SignalHeaderLeft"
+        app:layout_constraintTop_toTopOf="@+id/guidelineHeader" />
+
+    <TextView
+        android:id="@+id/blueTime"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:lines="2"
+        android:textColor="@color/red_700"
+        android:textStyle="bold"
+
+        app:layout_constraintBottom_toBottomOf="@+id/bluetoothBox"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineheaderRight"
+        app:layout_constraintStart_toStartOf="@+id/timeHeader"
+        app:layout_constraintTop_toTopOf="@+id/bluetoothBox" />
+
+    <TextView
+        android:id="@+id/netTime"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:lines="2"
+        android:textColor="@color/red_700"
+        android:textStyle="bold"
+
+        app:layout_constraintBottom_toBottomOf="@+id/networkBox"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineheaderRight"
+        app:layout_constraintStart_toStartOf="@+id/blueTime"
+        app:layout_constraintTop_toTopOf="@+id/networkBox" />
+
+    <TextView
+        android:id="@+id/wifiTime"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:lines="2"
+        android:textColor="@color/red_700"
+        android:textStyle="bold"
+
+        app:layout_constraintBottom_toBottomOf="@+id/wifiBox"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineheaderRight"
+        app:layout_constraintStart_toStartOf="@+id/netTime"
+        app:layout_constraintTop_toTopOf="@+id/wifiBox" />
+
+
+    <TextView
+        android:id="@+id/bluetoothBox"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:autoSizeMaxTextSize="100sp"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeTextType="uniform"
+        android:background="@color/bluetoothcol"
+        android:gravity="center"
+
+        android:lines="2"
+        app:layout_constraintEnd_toStartOf="@+id/SignalHeaderRight"
+        app:layout_constraintStart_toStartOf="@+id/signalHeader"
+        app:layout_constraintTop_toTopOf="@+id/guidelineboxstart" />
+
+
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:text="BT RSSI (inaccurate!): "
+        android:textColor="@color/red_700"
+        android:textStyle="bold"
+
+        app:layout_constraintBottom_toBottomOf="@+id/bluetoothBox"
+        app:layout_constraintEnd_toStartOf="@+id/typeHeaderRight"
+        app:layout_constraintStart_toStartOf="@+id/guidelineleft"
+        app:layout_constraintTop_toTopOf="@+id/bluetoothBox" />
+
+    <TextView
+        android:id="@+id/networkBox"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="2dp"
+        android:autoSizeMaxTextSize="100sp"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeTextType="uniform"
+        android:background="@color/networkcol"
+        android:gravity="center"
+        android:lines="2"
+        app:layout_constraintEnd_toEndOf="@+id/bluetoothBox"
+        app:layout_constraintStart_toStartOf="@+id/bluetoothBox"
+        app:layout_constraintTop_toBottomOf="@+id/bluetoothBox" />
+
+    <TextView
+        android:id="@+id/networkView"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:text="Cell dBm / approx nW: "
+        android:textColor="@color/red_700"
+
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/networkBox"
+        app:layout_constraintEnd_toStartOf="@+id/typeHeaderRight"
+        app:layout_constraintStart_toStartOf="@+id/textView3"
+        app:layout_constraintTop_toTopOf="@+id/networkBox" />
+
+    <TextView
+        android:id="@+id/wifiBox"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="2dp"
+        android:autoSizeMaxTextSize="100sp"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeTextType="uniform"
+        android:background="@color/wificol"
+        android:gravity="center"
+        android:lines="2"
+        app:layout_constraintEnd_toEndOf="@+id/networkBox"
+        app:layout_constraintStart_toStartOf="@+id/networkBox"
+        app:layout_constraintTop_toBottomOf="@+id/networkBox" />
+
+    <TextView
+        android:id="@+id/wifiView"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:text="Wifi dBm / approx nW: "
+        android:textColor="@color/red_700"
+        android:textStyle="bold"
+
+        app:layout_constraintBottom_toBottomOf="@+id/wifiBox"
+        app:layout_constraintEnd_toStartOf="@+id/typeHeaderRight"
+        app:layout_constraintStart_toStartOf="@+id/networkView"
+        app:layout_constraintTop_toTopOf="@+id/wifiBox" />
+
+
+
+    <Button
+        android:id="@+id/switchLayout"
+        android:layout_width="158dp"
+        android:layout_height="0dp"
+        android:autoSizeMaxTextSize="100sp"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeTextType="uniform"
+        android:background="@color/transparentBlue"
+        android:lines="2"
+        android:onClick="goSwitch"
+        android:text="Switch \n Layout"
+        android:textAllCaps="false"
+        android:textColor="@color/blue_100"
+        app:layout_constraintBottom_toTopOf="@+id/switchbottom"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/switchtop" />
+
+
+
+    <Button
+        android:id="@+id/scanBtn"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:autoSizeMaxTextSize="20sp"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeTextType="uniform"
+        android:background="@color/transparent_red_light"
+        android:gravity="center"
+        android:onClick="scanAll"
+        android:text="Start Retrieving Data"
+        android:textColor="@color/shockinglypurple"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guidelineBtnTop" />
+
+
+
+
+    <LinearLayout
+        android:id="@+id/navLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="6"
+        app:layout_constraintBottom_toTopOf="@+id/guideline2"
+        app:layout_constraintTop_toTopOf="@+id/guideline">
+
+        <Button
+            android:id="@+id/button_home"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:autoSizeMaxTextSize="100sp"
+            android:autoSizeMinTextSize="12sp"
+            android:autoSizeTextType="uniform"
+            android:background="@color/home_green"
+            android:onClick="goHome"
+            android:text=" Home "
+            android:textAllCaps="false" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.1" />
+
+        <Button
+            android:id="@+id/all_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+
+            android:layout_weight="1"
+            android:autoSizeMaxTextSize="100sp"
+            android:autoSizeMinTextSize="12sp"
+            android:autoSizeTextType="uniform"
+            android:background="@color/allcol"
+            android:onClick="goAll"
+            android:text=" Sum "
+            android:textAllCaps="false"
+            android:textColor="@color/blue_100" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.1" />
+
+        <Button
+            android:id="@+id/bluetooth_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:autoSizeMaxTextSize="100sp"
+            android:autoSizeMinTextSize="12sp"
+            android:autoSizeTextType="uniform"
+            android:background="@color/bluetoothcol"
+            android:gravity="center"
+            android:onClick="goBluetooth"
+            android:text="Bluetooth"
+            android:textAllCaps="false" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.1" />
+
+        <Button
+            android:id="@+id/network_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:autoSizeMaxTextSize="100sp"
+            android:autoSizeMinTextSize="12sp"
+            android:autoSizeTextType="uniform"
+            android:background="@color/networkcol"
+            android:onClick="goNetwork"
+            android:text="   Cell   "
+            android:textAllCaps="false" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.1" />
+
+        <Button
+            android:id="@+id/wifi_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:autoSizeMaxTextSize="100sp"
+            android:autoSizeMinTextSize="12sp"
+            android:autoSizeTextType="uniform"
+            android:background="@color/wificol"
+            android:onClick="goWifi"
+            android:text=" Wifi "
+            android:textAllCaps="false" />
+    </LinearLayout>
+
+
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

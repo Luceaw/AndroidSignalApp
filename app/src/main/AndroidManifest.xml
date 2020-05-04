@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.scanner">
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <application
+        android:allowBackup="true"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        android:roundIcon="@drawable/example_icon"
+        android:icon="@drawable/example_icon"
+        >
+
+
+        <activity
+            android:name=".splash_activity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="Networking Signal Finder"
+            android:noHistory="true"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".allActivityGraphs"
+            android:label="Sum of all signals" />
+        <activity
+            android:name=".AllActivity"
+            android:label="Sum of all signals" />
+        <activity
+            android:name=".NetworkActivity"
+            android:label="Scan Network" />
+        <activity
+            android:name=".BluetoothActivity"
+            android:label="Scan Bluetooth" />
+        <activity
+            android:name=".WifiActivity"
+            android:label="Scan WiFi" />
+        <activity
+            android:name=".MainActivity"
+            android:label="Home Page" />
+    </application>
+
+</manifest>
