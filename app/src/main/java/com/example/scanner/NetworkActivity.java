@@ -24,6 +24,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -42,11 +43,9 @@ public class NetworkActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        try
-        {
-            this.getSupportActionBar().hide();
-        }
-        catch (NullPointerException e){
+        try {
+            Objects.requireNonNull(this.getSupportActionBar()).hide();
+        } catch (NullPointerException ignored) {
         }
         running = false;
         super.onCreate(savedInstanceState);
@@ -58,7 +57,6 @@ public class NetworkActivity extends AppCompatActivity {
     }
 
     public void scanNetworks(View view) {
-        running = false;
         if (!running) {
             timerTask = new TimerTask() {
                 @Override
@@ -71,12 +69,8 @@ public class NetworkActivity extends AppCompatActivity {
                             try {
                                 if (getResults() == 1) {
                                     running = true;
-                                } else {
-                                    //didn't work'
                                 }
-
                             } finally {
-
                             }
                         }
                     });
@@ -96,93 +90,68 @@ public class NetworkActivity extends AppCompatActivity {
                 .getSystemService(Context.TELEPHONY_SERVICE);
 
         ArrayList<Long> times = new ArrayList<>();
-    if(telephonyManager !=null){
-    for (final CellInfo cellInfo : telephonyManager.getAllCellInfo()) {
-        if(cellInfo !=null) {
+        if (telephonyManager != null) {
+            for (final CellInfo cellInfo : telephonyManager.getAllCellInfo()) {
+                if (cellInfo != null) {
 
-            if(telephonyManager.getSignalStrength()!=null){
-                Log.v("dbm", telephonyManager.getSignalStrength().getGsmSignalStrength() + "");
-            }
+                    if (telephonyManager.getSignalStrength() != null) {
+                        Log.v("dbm", telephonyManager.getSignalStrength().getGsmSignalStrength() + "");
+                    }
 
-            long dBm = -250;
-            String name = "";
+                    long dBm = -250;
+                    String name = "";
 
-            if (cellInfo instanceof CellInfoCdma) {
-                dBm = ((CellInfoCdma) cellInfo).getCellSignalStrength().getDbm();
-                name = "CDMA / 3G / GPS";
-            } else{
-                if (cellInfo instanceof CellInfoGsm) {
-                    dBm = ((CellInfoGsm) cellInfo).getCellSignalStrength().getDbm();
-                    name = "2G";
-                } else{
-                    if (cellInfo instanceof CellInfoLte) {
-                        dBm = ((CellInfoLte) cellInfo).getCellSignalStrength().getDbm();
-                        name = "LTE / 4G";
-                    } else{
+                    if (cellInfo instanceof CellInfoCdma) {
+                        dBm = ((CellInfoCdma) cellInfo).getCellSignalStrength().getDbm();
+                        name = "CDMA / 3G / GPS";
+                    } else {
+                        if (cellInfo instanceof CellInfoGsm) {
+                            dBm = ((CellInfoGsm) cellInfo).getCellSignalStrength().getDbm();
+                            name = "2G";
+                        } else {
+                            if (cellInfo instanceof CellInfoLte) {
+                                dBm = ((CellInfoLte) cellInfo).getCellSignalStrength().getDbm();
+                                name = "LTE / 4G";
+                            } else {
                                 if (cellInfo instanceof CellInfoWcdma) {
                                     dBm = ((CellInfoWcdma) cellInfo).getCellSignalStrength().getDbm();
                                     name = "W-CDMA / 3G";
-                                } else{
+                                } else {
                                     dBm = -getValue(cellInfo.toString(), "CellSignalStrength", "level");
                                     name = cellInfo.getClass().getSimpleName();
-                                    Toast.makeText(this,"Unrecognised cell info!",Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(this, "Unrecognised cell info!", Toast.LENGTH_SHORT).show();
                                 }
                             }
+                        }
+                    }
+
+                    if (dBm > -250) {
+
+                        long millisecondsSinceEvent = (SystemClock.elapsedRealtimeNanos() - cellInfo.getTimeStamp()) / 1000000L;
+                        long timeOfEvent = System.currentTimeMillis() - millisecondsSinceEvent;
+                        times.add(System.currentTimeMillis() - timeOfEvent);
+                        String status;
+
+                        if (cellInfo.isRegistered()) {
+                            status = " -- In use -- ";
+                        } else {
+                            status = "";
+                        }
+
+                        List results = Arrays.asList(name, dBm, status);
+                        arrayList.add(results);
+                        valList.add(dBm);
+                        adapter.notifyDataSetChanged();
+                    }
                 }
+
             }
-
-            if(dBm > -250) {
-
-                long millisecondsSinceEvent = (SystemClock.elapsedRealtimeNanos() - cellInfo.getTimeStamp()) / 1000000L;
-                long timeOfEvent = System.currentTimeMillis() - millisecondsSinceEvent;
-                times.add(System.currentTimeMillis() - timeOfEvent);
-                String status;
-
-                if (cellInfo.isRegistered()) {
-                    status = " -- In use -- ";
-                } else {
-                    status = "";
-                }
-
-                List results = Arrays.asList(name, dBm, status);
-                arrayList.add(results);
-                valList.add(dBm);
-                adapter.notifyDataSetChanged();
-            }
-              /*
-                ((CellInfoLte) cellInfo).getCellSignalStrength().getDbm();
-                Long dBm = -getValue(cellInfo.toString(), "CellSignalStrength", "level");
-                Long rsrp = -getValue(cellInfo.toString(), " rsrp=-", "level");
-                String name = cellInfo.getClass().getSimpleName();
-                String service = getService(name);
-
-                long millisecondsSinceEvent = (SystemClock.elapsedRealtimeNanos() - cellInfo.getTimeStamp()) / 1000000L;
-                long timeOfEvent = System.currentTimeMillis() - millisecondsSinceEvent;
-                times.add(System.currentTimeMillis() - timeOfEvent);
-                String status = "";
-
-                if (cellInfo.isRegistered()) {
-                    status = " -- In use -- ";
-                } else {
-                    status = "";
-                }
-
-                List results = Arrays.asList(service, dBm, status);
-                arrayList.add(results);
-                valList.add(dBm);
-                adapter.notifyDataSetChanged();
-
-               */
         }
-
-    }
-}
-
 
         long totaltimedif = 0;
         long value;
 
-        if(times.size() >0) {
+        if (times.size() > 0) {
             for (int i = 0; i < times.size(); i++) {
                 value = times.get(i);
                 totaltimedif += value;
@@ -192,8 +161,6 @@ public class NetworkActivity extends AppCompatActivity {
             String time = ("" + times.get(0) + " ms");
             textView.setText(time);
 
-
-            // I miss python, R
             double Wsum = 0;
             double dBm;
             double mW;
@@ -208,52 +175,49 @@ public class NetworkActivity extends AppCompatActivity {
             TextView textView2 = findViewById(R.id.exposureBox);
             textView2.setText(exposure);
             return 1;
-        } else{
+        } else {
             return 0;
         }
     }
 
 
-    public void goHome(View view){
-        Intent intent = new Intent (this, MainActivity.class);
-        startActivity(intent);
-        timer.cancel();
-    }
-    public void goAll(View view){
-        Intent intent = new Intent (this, allActivityGraphs.class);
-        startActivity(intent);
-        timer.cancel();
-    }
-    public void goBluetooth(View view){
-        Intent intent = new Intent (this, BluetoothActivity.class);
-        startActivity(intent);
-        timer.cancel();
-    }
-    public void goNetwork(View view){
-        Intent intent = new Intent (this, NetworkActivity.class);
-        startActivity(intent);
-        timer.cancel();
-    }
-    public void goWifi(View view){
-        Intent intent = new Intent (this, WifiActivity.class);
+    public void goHome(View view) {
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         timer.cancel();
     }
 
-    private long getValue(String fullS, String startS, String stopS)
-    {
+    public void goAll(View view) {
+        Intent intent = new Intent(this, allActivityGraphs.class);
+        startActivity(intent);
+        timer.cancel();
+    }
+
+    public void goBluetooth(View view) {
+        Intent intent = new Intent(this, BluetoothActivity.class);
+        startActivity(intent);
+        timer.cancel();
+    }
+
+    public void goNetwork(View view) {
+        Intent intent = new Intent(this, NetworkActivity.class);
+        startActivity(intent);
+        timer.cancel();
+    }
+
+    public void goWifi(View view) {
+        Intent intent = new Intent(this, WifiActivity.class);
+        startActivity(intent);
+        timer.cancel();
+    }
+
+    private long getValue(String fullS, String startS, String stopS) {
         int index = fullS.indexOf(startS) + (startS).length();
-        int endIndex = fullS.indexOf(stopS,index);
+        int endIndex = fullS.indexOf(stopS, index);
 
-        String segment = fullS.substring(index,endIndex).trim();
+        String segment = fullS.substring(index, endIndex).trim();
 
         return new Scanner(segment).useDelimiter("\\D+").nextLong();
     }
-
-    private String getService(String name)
-    {
-        return name.substring(8).trim();
-    }
-
 
 }

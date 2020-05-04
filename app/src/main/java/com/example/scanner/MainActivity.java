@@ -1,12 +1,13 @@
 package com.example.scanner;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-// TODO: 5G signal detection
+import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.Objects;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -14,9 +15,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         try
         {
-            this.getSupportActionBar().hide();
-        }
-        catch (NullPointerException e){
+            Objects.requireNonNull(this.getSupportActionBar()).hide();
+        } catch (NullPointerException ignored) {
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
