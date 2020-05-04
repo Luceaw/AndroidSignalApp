@@ -25,7 +25,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -43,22 +42,35 @@ public class AllActivity extends AppCompatActivity {
     long netTime;
     long wifiTime;
 
-    private static DecimalFormat df = new DecimalFormat("0.00");
-    private Timer timer = new Timer();
-    private boolean running = false;
-
     private WifiManager wifiManager;
     private BluetoothAdapter bluetoothAdapter;
     private TelephonyManager telephonyManager;
 
-    private boolean wifistartOn;
-
-    private boolean blueStartOn;
-    private int bluecount = 0;
-
-    private final BroadcastReceiver bluereceiver = new BroadcastReceiver() {
+    private TextView wifiExp;
+    BroadcastReceiver wifiReceiver = new BroadcastReceiver() {
+        @Override
         public void onReceive(Context context, Intent intent) {
-            bluecount++;
+            unregisterReceiver(wifiReceiver);
+            List<ScanResult> results = wifiManager.getScanResults();
+            wifiTime = System.currentTimeMillis();
+            for (ScanResult scanResult : results) {
+                wifiList.add((long) scanResult.level);
+            }
+
+            if (wifiList.size() > 0) {
+
+                double[] result = new scannerAppTools().getMw(wifiList);
+                changeSize(result[0], "wifiBox");
+                String exposure = (result[0] + " Sum dBm / ~" + result[1] + " nW");
+                wifiExp.setText(exposure);
+            }
+            startWifi();
+        }
+    };
+    private TextView netExp;
+    private TextView blueExp;
+    BroadcastReceiver bluereceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
             blueTime = System.currentTimeMillis();
             String action = intent.getAction();
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
@@ -66,12 +78,21 @@ public class AllActivity extends AppCompatActivity {
                 blueList.add(rssi);
             }
             if (blueList.size() > 0) {
-                String exposure = getMw(blueList, "bluetoothBox");
-                TextView blueExp = findViewById(R.id.bluetoothBox);
+                double[] result = new scannerAppTools().getMw(blueList);
+                changeSize(result[0], "bluetoothBox");
+                String exposure = (result[0] + " Sum RSSI");
                 blueExp.setText(exposure);
             }
         }
     };
+    private TextView wifiText;
+
+    private Timer timer = new Timer();
+    private boolean running = false;
+    private TextView blueText;
+    private boolean wifistartOn;
+    private TextView netText;
+
 
     public void scanAll(View view) throws InterruptedException {
         if (!running) {
@@ -89,7 +110,6 @@ public class AllActivity extends AppCompatActivity {
                                 }
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
-                            } finally {
                             }
                         }
                     });
@@ -99,56 +119,42 @@ public class AllActivity extends AppCompatActivity {
         }
     }
 
-    BroadcastReceiver wifiReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            unregisterReceiver(wifiReceiver);
-            List<ScanResult> results = wifiManager.getScanResults();
-            wifiTime = System.currentTimeMillis();
-            for (ScanResult scanResult : results) {
-                wifiList.add((long) scanResult.level);
-            }
-
-            if (wifiList.size() > 0) {
-                String exposure = getMw(wifiList, "wifiBox");
-                TextView textView2 = findViewById(R.id.wifiBox);
-                textView2.setText(exposure);
-
-            }
-            try {
-                startWifi();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    };
+    private boolean blueStartOn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        running = false;
+
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_all);
 
         try {
             Objects.requireNonNull(this.getSupportActionBar()).hide();
         } catch (NullPointerException ignored) {
         }
 
-        running = false;
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_all);
-
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         telephonyManager = (TelephonyManager) getApplicationContext()
                 .getSystemService(Context.TELEPHONY_SERVICE);
         wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
-        if (wifiManager != null) {
-            wifistartOn = wifiManager.isWifiEnabled();
-        }
         if (bluetoothAdapter != null) {
             blueStartOn = bluetoothAdapter.isEnabled();
+        }
+        if (wifiManager != null) {
+            wifistartOn = wifiManager.isWifiEnabled();
         }
 
         blueTime = System.currentTimeMillis();
         wifiTime = System.currentTimeMillis();
+
+        wifiExp = findViewById(R.id.wifiBox);
+        netExp = findViewById(R.id.networkBox);
+        blueExp = findViewById(R.id.bluetoothBox);
+
+        wifiText = findViewById(R.id.wifiTime);
+        blueText = findViewById(R.id.blueTime);
+        netText = findViewById(R.id.netTime);
 
     }
 
@@ -161,17 +167,16 @@ public class AllActivity extends AppCompatActivity {
                 while ((System.currentTimeMillis() - start) < 3000 && (!bluetoothAdapter.isEnabled())) {
                     Thread.sleep(50);
                 }
-                Thread.sleep(500);
-            }
-
-            if (!bluetoothAdapter.isDiscovering()) {
-                blueList.clear();
-                IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-                registerReceiver(bluereceiver, filter);
-                bluetoothAdapter.startDiscovery();
+            } else {
+                if (!bluetoothAdapter.isDiscovering()) {
+                    blueList.clear();
+                    IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+                    registerReceiver(bluereceiver, filter);
+                    bluetoothAdapter.startDiscovery();
+                }
             }
         } else {
-            Toast.makeText(this, "Bluetooth not supported", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Bluetooth not supported", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -179,11 +184,9 @@ public class AllActivity extends AppCompatActivity {
     public int getNetwork() throws InterruptedException {
 
         String wifitimetaken = (((System.currentTimeMillis() - wifiTime) / 1000) + " s");
-        TextView wifiText = findViewById(R.id.wifiTime);
         wifiText.setText(wifitimetaken);
 
         String bluetimetaken = (((System.currentTimeMillis() - blueTime) / 1000) + " s");
-        TextView blueText = findViewById(R.id.blueTime);
         blueText.setText(bluetimetaken);
 
         if (System.currentTimeMillis() - blueTime > 10000) {
@@ -195,7 +198,7 @@ public class AllActivity extends AppCompatActivity {
 
         netList.clear();
         netTime = System.currentTimeMillis();
-        long time = (long) 0;
+        long time = 0;
         if (!telephonyManager.getAllCellInfo().isEmpty()) {
             for (final CellInfo cellInfo : telephonyManager.getAllCellInfo()) {
                 if (cellInfo != null) {
@@ -222,30 +225,30 @@ public class AllActivity extends AppCompatActivity {
                             }
                         }
                     }
-
                     if (dBm > -250) {
                         netList.add(dBm);
                     }
-
                 }
             }
         }
 
         if (netList.size() > 0) {
-            TextView textView = findViewById(R.id.netTime);
 
             String timeString = ((int) time + " s");
-            textView.setText(timeString);
-            TextView netExposure = findViewById(R.id.networkBox);
-            String exposure = getMw(netList, "networkBox");
-            netExposure.setText(exposure);
+            netText.setText(timeString);
+
+            double[] result = new scannerAppTools().getMw(netList);
+            changeSize(result[0], "networkBox");
+            String exposure = (result[0] + " Sum dBm / ~" + result[1] + " nW");
+            netExp.setText(exposure);
+
             return 1;
         } else {
             return 0;
         }
     }
 
-    private void startWifi() throws InterruptedException {
+    private void startWifi() {
         wifiList.clear();
         if (wifiManager != null) {
             if (!wifiManager.isWifiEnabled()) {
@@ -296,6 +299,23 @@ public class AllActivity extends AppCompatActivity {
 
     }
 
+    private long getValue(String fullS, String startS, String stopS) {
+        int index = fullS.indexOf(startS) + (startS).length();
+        int endIndex = fullS.indexOf(stopS, index);
+        String segment = fullS.substring(index, endIndex).trim();
+        return new Scanner(segment).useDelimiter("\\D+").nextLong();
+    }
+
+    private void changeSize(double dbDouble, String viewString) {
+        int dbInt = (int) Math.round(dbDouble);
+        int id = getResources().getIdentifier(viewString, "id", getPackageName());
+        TextView box = findViewById(id);
+        ViewGroup.LayoutParams params = box.getLayoutParams();
+        int newHeight = (40 + (20 * (((dbInt + 92) / 2) / 8)));
+        params.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newHeight, getResources().getDisplayMetrics());
+        box.setLayoutParams(params);
+    }
+
     public void onResume() {
         super.onResume();
         running = false;
@@ -332,47 +352,5 @@ public class AllActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private long getValue(String fullS, String startS, String stopS) {
-        int index = fullS.indexOf(startS) + (startS).length();
-        int endIndex = fullS.indexOf(stopS, index);
-        String segment = fullS.substring(index, endIndex).trim();
-        return new Scanner(segment).useDelimiter("\\D+").nextLong();
-    }
 
-    private String getService(String name) {
-        return name.substring(8).trim();
-    }
-
-    public String getMw(ArrayList<Long> list, String viewString) {
-
-        if (list.size() > 0) {
-            double Wsum = 0;
-            double dBm;
-            double mW;
-            for (int i = 0; i < list.size(); i++) {
-                dBm = list.get(i);
-                if (dBm < 0 && dBm > -200) {
-                    mW = Math.pow(10, ((dBm - 30) / 10));
-                    Wsum += mW;
-                }
-            }
-            String nsum = df.format(Wsum * 1000000000);
-            String dBmSum = df.format(10 * (Math.log10(1000 * Wsum)));
-
-            int id = getResources().getIdentifier(viewString, "id", getPackageName());
-            float dbFloat = Float.parseFloat(dBmSum);
-            int dbInt = Math.round(dbFloat);
-
-            TextView box = findViewById(id);
-            ViewGroup.LayoutParams params = box.getLayoutParams();
-            int newHeight = (40 + (20 * (((dbInt + 92) / 2) / 8)));
-
-            params.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newHeight, getResources().getDisplayMetrics());
-            box.setLayoutParams(params);
-
-            return (String) (dBmSum + " dBm / " + "\n" + nsum + " nW");
-        } else {
-            return "null";
-        }
-    }
 }

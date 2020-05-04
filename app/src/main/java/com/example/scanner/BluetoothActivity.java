@@ -2,7 +2,6 @@ package com.example.scanner;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -18,124 +17,109 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class BluetoothActivity extends AppCompatActivity {
 
-    private BluetoothManager bluetoothManager;
     private ArrayList<String> arrayList = new ArrayList<>();
-    private ArrayList<Integer> valList = new ArrayList<>();
+    private ArrayList<Long> blueList = new ArrayList<>();
     private ArrayAdapter adapter;
 
     private ProgressBar mProgressBar;
-    private CountDownTimer mCountDownTimer;
-    // Create a BroadcastReceiver for ACTION_FOUND.
-    private final BroadcastReceiver receiver = new BroadcastReceiver() {
+    private BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+    private boolean blueStartOn;
+    private boolean scanning;
+    int i = 0;
+    private BroadcastReceiver bluereceiver = new BroadcastReceiver() {
 
         public void onReceive(Context context, Intent intent) {
-            Toast.makeText(context, "Found Device!", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Found Device!", Toast.LENGTH_SHORT).show();
             String action = intent.getAction();
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                // Discovery has found a device. Get the BluetoothDevice
-                // object and its info from the Intent.
-                int rssi = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI, Short.MIN_VALUE);
+                long rssi = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI, Short.MIN_VALUE);
                 String name = intent.getStringExtra(BluetoothDevice.EXTRA_NAME);
                 arrayList.add(name + ": " + rssi + " dBm");
-                valList.add(rssi);
                 adapter.notifyDataSetChanged();
+                blueList.add(rssi);
+                TextView blueExp = findViewById(R.id.exposureBox);
 
-                TextView textView = findViewById(R.id.timeText);
-
-                // I miss python
-                double Wsum = 0;
-                double dBm;
-                double mW;
-                for (int i = 0; i < valList.size(); i++) {
-                    dBm = valList.get(i);
-                    mW = Math.pow(10, ((dBm - 30) / 10));
-                    Wsum += mW;
-                }
-                String nsum = df.format(Wsum * 1000000000);
-                String dBmSum = df.format(10 * (Math.log10(1000 * Wsum)));
-                String exposure = (dBmSum + " total RSSI / " + "\n" + nsum + " assumed nW");
-                TextView textView2 = findViewById(R.id.exposureBox);
-                textView2.setText(exposure);
+                double[] result = new scannerAppTools().getMw(blueList);
+                String exposure = (result[0] + " Sum RSSI");
+                blueExp.setText(exposure);
             }
         }
     };
 
-    long startime;
-    private static DecimalFormat df = new DecimalFormat("0.00");
-    BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-
-    private boolean blueStartOn;
-    int i = 0;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        scanning = false;
         try {
             Objects.requireNonNull(this.getSupportActionBar()).hide();
         } catch (NullPointerException ignored) {
         }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth);
-        arrayList.add("~~~ Bluetooth List ~~~");
-        ListView listView = findViewById(R.id.blueList);
+
         adapter = new ArrayAdapter<>(this, R.layout.simple_list_item_1, arrayList);
+        ListView listView = findViewById(R.id.blueList);
         listView.setAdapter(adapter);
+
+        arrayList.add("~~~ Bluetooth List ~~~");
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mProgressBar.setProgress(i);
 
     }
 
     public void scanBluetooth(View view) throws InterruptedException {
-        i = 0;
-        arrayList.clear();
-        valList.clear();
-        startime = System.currentTimeMillis();
-        if (bluetoothAdapter != null) {
-            Toast.makeText(this, "Scanning Bluetooth", Toast.LENGTH_LONG).show();
-            if (!bluetoothAdapter.isEnabled()) {
-                blueStartOn = false;
-                bluetoothAdapter.enable();
-                long start = System.currentTimeMillis();
-                while ((System.currentTimeMillis() - start) < 3000 && (!bluetoothAdapter.isEnabled())) {
-                    Thread.sleep(50);
-                }
-                Thread.sleep(500);
-            } else {
-                blueStartOn = true;
-            }
+        if (!scanning) {
+            scanning = true;
+            i = 0;
 
-            // Register for broadcasts when a device is discovered.
-            IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-            registerReceiver(receiver, filter);
-
-            bluetoothAdapter.startDiscovery();
-
-            mCountDownTimer = new CountDownTimer(5000, 100) {
-                @Override
-                public void onTick(long millisUntilFinished) {
-                    i++;
-                    int percent = i * 100 * 100 / 5000;
-                    mProgressBar.setProgress(percent);
-                }
-
-                @Override
-                public void onFinish() {
-                    i++;
-                    mProgressBar.setProgress(100);
-                    if (!blueStartOn) {
-                        bluetoothAdapter.disable();
+            arrayList.clear();
+            blueList.clear();
+            if (bluetoothAdapter != null) {
+                Toast.makeText(this, "Scanning Bluetooth", Toast.LENGTH_SHORT).show();
+                if (!bluetoothAdapter.isEnabled()) {
+                    blueStartOn = false;
+                    bluetoothAdapter.enable();
+                    long start = System.currentTimeMillis();
+                    while ((System.currentTimeMillis() - start) < 3000 && (!bluetoothAdapter.isEnabled())) {
+                        Thread.sleep(50);
                     }
+                    Thread.sleep(500);
+                } else {
+                    blueStartOn = true;
                 }
-            }.start();
 
+                IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+                registerReceiver(bluereceiver, filter);
 
-        } else {
-            Toast.makeText(this, "Bluetooth not supported", Toast.LENGTH_LONG).show();
+                bluetoothAdapter.startDiscovery();
+
+                new CountDownTimer(5000, 100) {
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+                        i++;
+                        int percent = i * 100 * 100 / 5000;
+                        mProgressBar.setProgress(percent);
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        i++;
+                        mProgressBar.setProgress(100);
+                        if (!blueStartOn) {
+                            scanning = false;
+                            bluetoothAdapter.disable();
+                        }
+                    }
+                }.start();
+            } else {
+                Toast.makeText(this, "Bluetooth not supported", Toast.LENGTH_LONG).show();
+            }
         }
     }
 
@@ -143,7 +127,7 @@ public class BluetoothActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         try {
-            unregisterReceiver(receiver);
+            unregisterReceiver(bluereceiver);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -159,8 +143,14 @@ public class BluetoothActivity extends AppCompatActivity {
                 }
             }
         }
-
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        scanning = false;
+    }
+
 
 
     public void goHome(View view) {
