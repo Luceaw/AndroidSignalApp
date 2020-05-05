@@ -76,6 +76,7 @@ public class NetworkActivity extends AppCompatActivity {
         long time;
         arrayList.clear();
         valList.clear();
+        adapter.notifyDataSetChanged();
         startime = System.currentTimeMillis();
         TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext()
                 .getSystemService(Context.TELEPHONY_SERVICE);

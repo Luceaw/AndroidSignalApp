@@ -80,8 +80,9 @@ public class BluetoothActivity extends AppCompatActivity {
 
             arrayList.clear();
             blueList.clear();
+            adapter.notifyDataSetChanged();
+
             if (bluetoothAdapter != null) {
-                Toast.makeText(this, "Scanning Bluetooth", Toast.LENGTH_SHORT).show();
                 if (!bluetoothAdapter.isEnabled()) {
                     blueStartOn = false;
                     bluetoothAdapter.enable();
@@ -98,6 +99,7 @@ public class BluetoothActivity extends AppCompatActivity {
                 registerReceiver(bluereceiver, filter);
 
                 bluetoothAdapter.startDiscovery();
+                Toast.makeText(this, "Scanning Bluetooth", Toast.LENGTH_SHORT).show();
 
                 new CountDownTimer(5000, 100) {
                     @Override

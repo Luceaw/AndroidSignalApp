@@ -100,6 +100,7 @@ public class WifiActivity extends AppCompatActivity {
     private void scanWifi() {
         arrayList.clear();
         valList.clear();
+        adapter.notifyDataSetChanged();
 
         if (System.currentTimeMillis() - startime > 10000) {
             wifiScanning = false;
