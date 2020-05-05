@@ -42,6 +42,7 @@ public class NetworkActivity extends AppCompatActivity {
         } catch (NullPointerException ignored) {
         }
 
+        arrayList.add("Press retrieve to get results");
         ListView listView = findViewById(R.id.networkList);
         adapter = new ArrayAdapter<>(this, R.layout.simple_list_item_1, arrayList);
         listView.setAdapter(adapter);
@@ -91,7 +92,7 @@ public class NetworkActivity extends AppCompatActivity {
                     && times.size() > 0 && valList.size() > 0) {
 
                 time = (long) times.get(1);
-                String string = (time + " s");
+                String string = (time + " ms");
                 timeTaken.setText(string);
 
                 double[] sums = new scannerAppTools().getMw(valList);

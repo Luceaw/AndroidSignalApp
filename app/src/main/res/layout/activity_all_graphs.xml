@@ -316,7 +316,7 @@
             android:autoSizeTextType="uniform"
             android:background="@color/home_green"
             android:onClick="goHome"
-            android:text=" Home "
+            android:text=".   Home   ."
             android:textAllCaps="false" />
 
         <TextView
@@ -335,7 +335,7 @@
             android:autoSizeTextType="uniform"
             android:background="@color/allcol"
             android:onClick="goAll"
-            android:text=" Sum "
+            android:text=".   Total   ."
             android:textAllCaps="false"
             android:textColor="@color/blue_100" />
 
@@ -373,7 +373,7 @@
             android:autoSizeTextType="uniform"
             android:background="@color/networkcol"
             android:onClick="goNetwork"
-            android:text="   Cell   "
+            android:text=".    Cell    ."
             android:textAllCaps="false" />
 
         <TextView
@@ -391,7 +391,7 @@
             android:autoSizeTextType="uniform"
             android:background="@color/wificol"
             android:onClick="goWifi"
-            android:text=" Wifi "
+            android:text=".    Wifi    ."
             android:textAllCaps="false" />
     </LinearLayout>
 

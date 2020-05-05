@@ -66,6 +66,7 @@ public class WifiActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         if (wifiManager != null) {
             wifistart = wifiManager.isWifiEnabled();
         }
@@ -82,7 +83,7 @@ public class WifiActivity extends AppCompatActivity {
         wifiExp = findViewById(R.id.exposureBox);
         ListView wifiList = findViewById(R.id.wifiList);
 
-        arrayList.add("~~~ Router list ~~~");
+        arrayList.add("Press Scan to get results");
 
         Button buttonScan = findViewById(R.id.scanBtn);
         buttonScan.setOnClickListener(new View.OnClickListener() {
@@ -92,7 +93,6 @@ public class WifiActivity extends AppCompatActivity {
             }
         });
 
-        wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         adapter = new ArrayAdapter<>(this, R.layout.simple_list_item_1, arrayList);
         wifiList.setAdapter(adapter);
     }

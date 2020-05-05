@@ -237,7 +237,7 @@ public class allActivityGraphs extends AppCompatActivity {
                     int yVal = (int) Math.round(sums[0]);
                     int xVal = Math.round(System.currentTimeMillis() - startTime) / 1000;
                     netSeries.appendData(new DataPoint(xVal, yVal), true, 2000);
-                    if (time < 0.101) {
+                    if (time < 101) {
                         netPointSeries.appendData(new DataPoint(xVal, yVal), true, 500);
                     }
                     return 1;

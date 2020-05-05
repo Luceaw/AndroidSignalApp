@@ -362,6 +362,7 @@
         android:id="@+id/navLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_weight="0.5"
         android:gravity="center"
         android:orientation="horizontal"
         android:weightSum="6"
@@ -378,7 +379,7 @@
             android:autoSizeTextType="uniform"
             android:background="@color/home_green"
             android:onClick="goHome"
-            android:text=" Home "
+            android:text=".   Home   ."
             android:textAllCaps="false" />
 
         <TextView
@@ -397,7 +398,7 @@
             android:autoSizeTextType="uniform"
             android:background="@color/allcol"
             android:onClick="goAll"
-            android:text=" Sum "
+            android:text=".   Total   ."
             android:textAllCaps="false"
             android:textColor="@color/blue_100" />
 
@@ -410,14 +411,14 @@
             android:id="@+id/bluetooth_button"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+
             android:layout_weight="1"
             android:autoSizeMaxTextSize="100sp"
             android:autoSizeMinTextSize="12sp"
             android:autoSizeTextType="uniform"
             android:background="@color/bluetoothcol"
-            android:gravity="center"
             android:onClick="goBluetooth"
-            android:text="Bluetooth"
+            android:text=" Bluetooth "
             android:textAllCaps="false" />
 
         <TextView
@@ -435,7 +436,7 @@
             android:autoSizeTextType="uniform"
             android:background="@color/networkcol"
             android:onClick="goNetwork"
-            android:text="   Cell   "
+            android:text=".    Cell    ."
             android:textAllCaps="false" />
 
         <TextView
@@ -453,7 +454,7 @@
             android:autoSizeTextType="uniform"
             android:background="@color/wificol"
             android:onClick="goWifi"
-            android:text=" Wifi "
+            android:text=".    Wifi    ."
             android:textAllCaps="false" />
     </LinearLayout>
 

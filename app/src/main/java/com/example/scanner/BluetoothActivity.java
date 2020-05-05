@@ -67,7 +67,7 @@ public class BluetoothActivity extends AppCompatActivity {
         ListView listView = findViewById(R.id.blueList);
         listView.setAdapter(adapter);
 
-        arrayList.add("~~~ Bluetooth List ~~~");
+        arrayList.add("Press Scan to get results");
         mProgressBar = findViewById(R.id.progressBar);
         mProgressBar.setProgress(i);
 

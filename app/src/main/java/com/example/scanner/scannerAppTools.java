@@ -50,7 +50,7 @@ public class scannerAppTools {
                 long dBm;
                 long millisecondsSinceEvent = (SystemClock.elapsedRealtimeNanos() - cellInfo.getTimeStamp()) / 1000000L;
                 long timeOfEvent = System.currentTimeMillis() - millisecondsSinceEvent;
-                time = (System.currentTimeMillis() - timeOfEvent) / 1000;
+                time = (System.currentTimeMillis() - timeOfEvent);
 
                 if (cellInfo.isRegistered()) {
                     statusList.add(" - In use!");
