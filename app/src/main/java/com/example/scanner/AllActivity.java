@@ -28,7 +28,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -219,7 +218,7 @@ public class AllActivity extends AppCompatActivity {
                                 if (cellInfo instanceof CellInfoWcdma) {
                                     dBm = ((CellInfoWcdma) cellInfo).getCellSignalStrength().getDbm();
                                 } else {
-                                    dBm = -getValue(cellInfo.toString(), "CellSignalStrength", "level");
+                                    dBm = -(new scannerAppTools().getValue(cellInfo.toString(), "CellSignalStrength", "level"));
                                     Toast.makeText(this, "Unrecognised cell info!", Toast.LENGTH_SHORT).show();
                                 }
                             }
@@ -297,13 +296,6 @@ public class AllActivity extends AppCompatActivity {
             }
         }
 
-    }
-
-    private long getValue(String fullS, String startS, String stopS) {
-        int index = fullS.indexOf(startS) + (startS).length();
-        int endIndex = fullS.indexOf(stopS, index);
-        String segment = fullS.substring(index, endIndex).trim();
-        return new Scanner(segment).useDelimiter("\\D+").nextLong();
     }
 
     private void changeSize(double dbDouble, String viewString) {

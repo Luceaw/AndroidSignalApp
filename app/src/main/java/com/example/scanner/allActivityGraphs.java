@@ -217,7 +217,7 @@ public class allActivityGraphs extends AppCompatActivity {
 
     @SuppressLint("MissingPermission")
     public int getNetwork() throws InterruptedException {
-        long time = 0;
+        long time;
         netList.clear();
         netTime = System.currentTimeMillis();
 

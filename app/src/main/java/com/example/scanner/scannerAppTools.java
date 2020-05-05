@@ -16,7 +16,7 @@ public class scannerAppTools {
 
     private static DecimalFormat df = new DecimalFormat("0.00");
 
-    public double[] getMw(ArrayList list) {
+    double[] getMw(ArrayList list) {
 
         if (list.size() > 0) {
             double Wsum = 0;
@@ -39,12 +39,12 @@ public class scannerAppTools {
         }
     }
 
-    public ArrayList[] telephonyDBm(List<CellInfo> getAllCellInfo) {
+    ArrayList[] telephonyDBm(List<CellInfo> getAllCellInfo) {
         ArrayList<Long> netList = new ArrayList<>();
         ArrayList<Long> timeList = new ArrayList<>();
         ArrayList<String> nameList = new ArrayList<>();
         ArrayList<String> statusList = new ArrayList<>();
-        long time = 0;
+        long time;
         for (final CellInfo cellInfo : getAllCellInfo) {
             if (cellInfo != null) {
                 long dBm;
@@ -89,7 +89,7 @@ public class scannerAppTools {
         return new ArrayList[]{netList, timeList, nameList, statusList};
     }
 
-    private long getValue(String fullS, String startS, String stopS) {
+    Long getValue(String fullS, String startS, String stopS) {
         int index = fullS.indexOf(startS) + (startS).length();
         int endIndex = fullS.indexOf(stopS, index);
         String segment = fullS.substring(index, endIndex).trim();

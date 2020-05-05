@@ -72,7 +72,7 @@ public class NetworkActivity extends AppCompatActivity {
 
     @SuppressLint("MissingPermission")
     public int getResults() {
-        long time = 0;
+        long time;
         arrayList.clear();
         valList.clear();
         startime = System.currentTimeMillis();

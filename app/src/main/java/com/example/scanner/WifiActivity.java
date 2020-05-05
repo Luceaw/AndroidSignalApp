@@ -16,7 +16,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -28,7 +27,6 @@ public class WifiActivity extends AppCompatActivity {
     private ArrayList<Long> valList = new ArrayList<>();
     private ArrayAdapter adapter;
     long startime;
-    private static DecimalFormat df = new DecimalFormat("0.00");
     private boolean wifiScanning;
     private boolean wifistart;
     private TextView wifiText;
