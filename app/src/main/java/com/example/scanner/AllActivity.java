@@ -1,6 +1,5 @@
 package com.example.scanner;
 
-import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -10,12 +9,7 @@ import android.content.IntentFilter;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.telephony.CellInfo;
-import android.telephony.CellInfoCdma;
-import android.telephony.CellInfoGsm;
-import android.telephony.CellInfoLte;
-import android.telephony.CellInfoWcdma;
 import android.telephony.TelephonyManager;
 import android.util.TypedValue;
 import android.view.View;
@@ -23,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
@@ -34,7 +29,7 @@ import java.util.TimerTask;
 public class AllActivity extends AppCompatActivity {
 
     private ArrayList<Long> blueList = new ArrayList<>();
-    private ArrayList<Long> netList = new ArrayList<>();
+    private ArrayList netList = new ArrayList<>();
     private ArrayList<Long> wifiList = new ArrayList<>();
 
     long blueTime;
@@ -91,32 +86,31 @@ public class AllActivity extends AppCompatActivity {
     private TextView blueText;
     private boolean wifistartOn;
     private TextView netText;
+    public TelephonyManager.CellInfoCallback cellInfoCallback = new TelephonyManager.CellInfoCallback() {
+        @Override
+        public void onCellInfo(@NonNull List<CellInfo> cellInfo) {
+            long time;
+            ArrayList[] dBms = new scannerAppTools().telephonyDBm(cellInfo);
+            netList = dBms[0];
+            ArrayList times = dBms[1];
+            ArrayList names = dBms[2];
+            ArrayList status = dBms[3];
 
+            if (names.size() == netList.size() && netList.size() == status.size()
+                    && times.size() > 0 && netList.size() > 0) {
+                time = (long) times.get(1);
 
-    public void scanAll(View view) throws InterruptedException {
-        if (!running) {
-            startBluetooth();
-            startWifi();
-            TimerTask timerTask = new TimerTask() {
-                @Override
-                public void run() {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                if (getNetwork() == 1) {
-                                    running = true;
-                                }
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-                }
-            };
-            timer.schedule(timerTask, 0, 100);
+                double[] result = new scannerAppTools().getMw(netList);
+                changeSize(result[0], "networkBox");
+
+                String timeString = ((int) time + " s");
+                String exposure = (result[0] + " Sum dBm / ~" + result[1] + " nW");
+                netExp.setText(exposure);
+                netText.setText(timeString);
+
+            }
         }
-    }
+    };
 
     private boolean blueStartOn;
 
@@ -179,9 +173,31 @@ public class AllActivity extends AppCompatActivity {
         }
     }
 
+    public void scanAll(View view) throws InterruptedException {
+        if (!running) {
+            startBluetooth();
+            startWifi();
+            TimerTask timerTask = new TimerTask() {
+                @Override
+                public void run() {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                getNetwork();
+                                running = true;
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                }
+            };
+            timer.schedule(timerTask, 0, 100);
+        }
+    }
 
-    @SuppressLint("MissingPermission")
-    public int getNetwork() throws InterruptedException {
+    public void getNetwork() throws InterruptedException {
 
         String wifitimetaken = (((System.currentTimeMillis() - wifiTime) / 1000) + " s");
         wifiText.setText(wifitimetaken);
@@ -198,53 +214,8 @@ public class AllActivity extends AppCompatActivity {
 
         netList.clear();
         netTime = System.currentTimeMillis();
-        long time = 0;
-        if (!telephonyManager.getAllCellInfo().isEmpty()) {
-            for (final CellInfo cellInfo : telephonyManager.getAllCellInfo()) {
-                if (cellInfo != null) {
-                    long dBm;
-                    long millisecondsSinceEvent = (SystemClock.elapsedRealtimeNanos() - cellInfo.getTimeStamp()) / 1000000L;
-                    long timeOfEvent = System.currentTimeMillis() - millisecondsSinceEvent;
-                    time = (System.currentTimeMillis() - timeOfEvent) / 1000;
-
-                    if (cellInfo instanceof CellInfoCdma) {
-                        dBm = ((CellInfoCdma) cellInfo).getCellSignalStrength().getDbm();
-                    } else {
-                        if (cellInfo instanceof CellInfoGsm) {
-                            dBm = ((CellInfoGsm) cellInfo).getCellSignalStrength().getDbm();
-                        } else {
-                            if (cellInfo instanceof CellInfoLte) {
-                                dBm = ((CellInfoLte) cellInfo).getCellSignalStrength().getDbm();
-                            } else {
-                                if (cellInfo instanceof CellInfoWcdma) {
-                                    dBm = ((CellInfoWcdma) cellInfo).getCellSignalStrength().getDbm();
-                                } else {
-                                    dBm = -(new scannerAppTools().getValue(cellInfo.toString(), "CellSignalStrength", "level"));
-                                    Toast.makeText(this, "Unrecognised cell info!", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        }
-                    }
-                    if (dBm > -250) {
-                        netList.add(dBm);
-                    }
-                }
-            }
-        }
-
-        if (netList.size() > 0) {
-
-            String timeString = ((int) time + " s");
-            netText.setText(timeString);
-
-            double[] result = new scannerAppTools().getMw(netList);
-            changeSize(result[0], "networkBox");
-            String exposure = (result[0] + " Sum dBm / ~" + result[1] + " nW");
-            netExp.setText(exposure);
-
-            return 1;
-        } else {
-            return 0;
+        if (telephonyManager != null) {
+            telephonyManager.requestCellInfoUpdate(this.getMainExecutor(), cellInfoCallback);
         }
     }
 

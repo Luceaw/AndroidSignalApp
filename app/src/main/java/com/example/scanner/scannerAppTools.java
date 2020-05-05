@@ -5,6 +5,8 @@ import android.telephony.CellInfo;
 import android.telephony.CellInfoCdma;
 import android.telephony.CellInfoGsm;
 import android.telephony.CellInfoLte;
+import android.telephony.CellInfoNr;
+import android.telephony.CellInfoTdscdma;
 import android.telephony.CellInfoWcdma;
 
 import java.text.DecimalFormat;
@@ -70,12 +72,22 @@ public class scannerAppTools {
                             dBm = ((CellInfoLte) cellInfo).getCellSignalStrength().getDbm();
                             nameList.add("LTE / 4G");
                         } else {
-                            if (cellInfo instanceof CellInfoWcdma) {
-                                dBm = ((CellInfoWcdma) cellInfo).getCellSignalStrength().getDbm();
-                                nameList.add("W-CDMA / 3G");
+                            if (cellInfo instanceof CellInfoNr) {
+                                dBm = ((CellInfoNr) cellInfo).getCellSignalStrength().getDbm();
+                                nameList.add("5G");
                             } else {
-                                dBm = -getValue(cellInfo.toString(), "CellSignalStrength", "level");
-                                nameList.add(cellInfo.getClass().getSimpleName());
+                                if (cellInfo instanceof CellInfoWcdma) {
+                                    dBm = ((CellInfoWcdma) cellInfo).getCellSignalStrength().getDbm();
+                                    nameList.add("W-CDMA / 3G");
+                                } else {
+                                    if (cellInfo instanceof CellInfoTdscdma) {
+                                        dBm = ((CellInfoTdscdma) cellInfo).getCellSignalStrength().getDbm();
+                                        nameList.add("TD-SCDMA / 3G");
+                                    } else {
+                                        dBm = -getValue(cellInfo.toString(), "CellSignalStrength", "level");
+                                        nameList.add(cellInfo.getClass().getSimpleName());
+                                    }
+                                }
                             }
                         }
                     }
@@ -89,7 +101,7 @@ public class scannerAppTools {
         return new ArrayList[]{netList, timeList, nameList, statusList};
     }
 
-    Long getValue(String fullS, String startS, String stopS) {
+    private Long getValue(String fullS, String startS, String stopS) {
         int index = fullS.indexOf(startS) + (startS).length();
         int endIndex = fullS.indexOf(stopS, index);
         String segment = fullS.substring(index, endIndex).trim();
