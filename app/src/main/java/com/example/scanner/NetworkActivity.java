@@ -1,18 +1,20 @@
 package com.example.scanner;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.telephony.CellInfo;
 import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -52,38 +54,11 @@ public class NetworkActivity extends AppCompatActivity {
 
     }
 
-    public void scanNetworks(View view) {
-        if (!running) {
-            TimerTask timerTask = new TimerTask() {
-                @Override
-                public void run() {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (getResults() == 1) {
-                                running = true;
-                            }
-                        }
-                    });
-                }
-            };
-            timer.schedule(timerTask, 0, 500);
-        }
-    }
-
-    @SuppressLint("MissingPermission")
-    public int getResults() {
-        long time;
-        arrayList.clear();
-        valList.clear();
-        adapter.notifyDataSetChanged();
-        startime = System.currentTimeMillis();
-        TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext()
-                .getSystemService(Context.TELEPHONY_SERVICE);
-
-        if (!telephonyManager.getAllCellInfo().isEmpty()) {
-
-            ArrayList[] dBms = new scannerAppTools().telephonyDBm(telephonyManager.getAllCellInfo());
+    public TelephonyManager.CellInfoCallback cellInfoCallback = new TelephonyManager.CellInfoCallback() {
+        @Override
+        public void onCellInfo(@NonNull List<CellInfo> cellInfo) {
+            long time;
+            ArrayList[] dBms = new scannerAppTools().telephonyDBm(cellInfo);
             valList = dBms[0];
             ArrayList times = dBms[1];
             ArrayList names = dBms[2];
@@ -110,14 +85,37 @@ public class NetworkActivity extends AppCompatActivity {
                     String concat = (name + ": " + dBm + " dBm " + inUse);
                     arrayList.add(concat);
                 }
-
                 adapter.notifyDataSetChanged();
-                return 1;
-            } else {
-                return 0;
             }
-        } else {
-            return 1;
+        }
+    };
+
+    public void scanNetworks(View view) {
+        if (!running) {
+            TimerTask timerTask = new TimerTask() {
+                @Override
+                public void run() {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            getResults();
+                            running = true;
+                        }
+                    });
+                }
+            };
+            timer.schedule(timerTask, 0, 500);
+        }
+    }
+
+    public void getResults() {
+        arrayList.clear();
+        valList.clear();
+        startime = System.currentTimeMillis();
+        TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext()
+                .getSystemService(Context.TELEPHONY_SERVICE);
+        if (telephonyManager != null) {
+            telephonyManager.requestCellInfoUpdate(this.getMainExecutor(), cellInfoCallback);
         }
     }
 

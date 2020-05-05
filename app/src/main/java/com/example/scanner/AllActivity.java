@@ -179,6 +179,7 @@ public class AllActivity extends AppCompatActivity {
         }
     }
 
+
     @SuppressLint("MissingPermission")
     public int getNetwork() throws InterruptedException {
 

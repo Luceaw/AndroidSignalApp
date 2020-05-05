@@ -1,6 +1,5 @@
 package com.example.scanner;
 
-import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -11,11 +10,13 @@ import android.graphics.Color;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.telephony.CellInfo;
 import android.telephony.TelephonyManager;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.jjoe64.graphview.GraphView;
@@ -88,29 +89,29 @@ public class allActivityGraphs extends AppCompatActivity {
     private long startTime;
     private boolean blueStartOn;
 
-    public void scanAll(View view) throws InterruptedException {
-        if (!running) {
-            startBluetooth();
-            startWifi();
-            TimerTask timerTask = new TimerTask() {
-                @Override
-                public void run() {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                if (getNetwork() == 1)
-                                    running = true;
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
+    public TelephonyManager.CellInfoCallback cellInfoCallback = new TelephonyManager.CellInfoCallback() {
+        @Override
+        public void onCellInfo(@NonNull List<CellInfo> cellInfo) {
+            long time;
+            ArrayList[] dBms = new scannerAppTools().telephonyDBm(cellInfo);
+            netList = dBms[0];
+            ArrayList times = dBms[1];
+            ArrayList names = dBms[2];
+            ArrayList status = dBms[3];
+
+            if (names.size() == netList.size() && netList.size() == status.size()
+                    && times.size() > 0 && netList.size() > 0) {
+                time = (long) times.get(1);
+                double[] sums = new scannerAppTools().getMw(netList);
+                int yVal = (int) Math.round(sums[0]);
+                int xVal = Math.round(System.currentTimeMillis() - startTime) / 1000;
+                netSeries.appendData(new DataPoint(xVal, yVal), true, 2000);
+                if (time < 101) {
+                    netPointSeries.appendData(new DataPoint(xVal, yVal), true, 500);
                 }
-            };
-            timer.schedule(timerTask, 0, 100);
+            }
         }
-    }
+    };
 
     private boolean wifistartOn;
 
@@ -215,40 +216,39 @@ public class allActivityGraphs extends AppCompatActivity {
         }
     }
 
-    @SuppressLint("MissingPermission")
-    public int getNetwork() throws InterruptedException {
-        long time;
+    public void scanAll(View view) throws InterruptedException {
+        if (!running) {
+            startBluetooth();
+            startWifi();
+            TimerTask timerTask = new TimerTask() {
+                @Override
+                public void run() {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            getNetwork();
+                            running = true;
+                            try {
+                                if (System.currentTimeMillis() - blueTime > 10000) {
+                                    blueList.clear();
+                                    startBluetooth();
+                                }
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                }
+            };
+            timer.schedule(timerTask, 0, 100);
+        }
+    }
+
+    public void getNetwork() {
         netList.clear();
         netTime = System.currentTimeMillis();
-
-        if (System.currentTimeMillis() - blueTime > 10000) {
-            blueList.clear();
-            startBluetooth();
-        }
-
-        if (!telephonyManager.getAllCellInfo().isEmpty()) {
-            ArrayList[] dBms = new scannerAppTools().telephonyDBm(telephonyManager.getAllCellInfo());
-            netList = dBms[0];
-            ArrayList times = dBms[1];
-            if (times.size() > 0) {
-                time = (long) times.get(1);
-                if (netList.size() > 0) {
-                    double[] sums = new scannerAppTools().getMw(netList);
-                    int yVal = (int) Math.round(sums[0]);
-                    int xVal = Math.round(System.currentTimeMillis() - startTime) / 1000;
-                    netSeries.appendData(new DataPoint(xVal, yVal), true, 2000);
-                    if (time < 101) {
-                        netPointSeries.appendData(new DataPoint(xVal, yVal), true, 500);
-                    }
-                    return 1;
-                } else {
-                    return 0;
-                }
-            } else {
-                return 0;
-            }
-        } else {
-            return 1;
+        if (telephonyManager != null) {
+            telephonyManager.requestCellInfoUpdate(this.getMainExecutor(), cellInfoCallback);
         }
     }
 
