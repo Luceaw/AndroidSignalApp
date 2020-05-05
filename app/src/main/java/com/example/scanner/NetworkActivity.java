@@ -12,37 +12,35 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
-import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class NetworkActivity extends AppCompatActivity {
 
-    private ArrayList<List> arrayList = new ArrayList<>();
+    private ArrayList<String> arrayList = new ArrayList<>();
     private ArrayList valList = new ArrayList<>();
-    private ArrayAdapter adapter;
     long startime;
-    private static DecimalFormat df = new DecimalFormat("0.00");
     private Timer timer = new Timer();
-    private TimerTask timerTask;
     private boolean running = false;
     private TextView timeTaken;
     private TextView exposurebox;
+    private ArrayAdapter adapter;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        running = false;
+
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_network);
+
         try {
             Objects.requireNonNull(this.getSupportActionBar()).hide();
         } catch (NullPointerException ignored) {
         }
-        running = false;
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_network);
 
         ListView listView = findViewById(R.id.networkList);
         adapter = new ArrayAdapter<>(this, R.layout.simple_list_item_1, arrayList);
@@ -50,23 +48,19 @@ public class NetworkActivity extends AppCompatActivity {
 
         timeTaken = findViewById(R.id.timeText);
         exposurebox = findViewById(R.id.exposureBox);
+
     }
 
     public void scanNetworks(View view) {
         if (!running) {
-            timerTask = new TimerTask() {
+            TimerTask timerTask = new TimerTask() {
                 @Override
                 public void run() {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            // Check if Data is Enabled
-                            // Check if null
-                            try {
-                                if (getResults() == 1) {
-                                    running = true;
-                                }
-                            } finally {
+                            if (getResults() == 1) {
+                                running = true;
                             }
                         }
                     });
@@ -79,7 +73,6 @@ public class NetworkActivity extends AppCompatActivity {
     @SuppressLint("MissingPermission")
     public int getResults() {
         long time = 0;
-
         arrayList.clear();
         valList.clear();
         startime = System.currentTimeMillis();
@@ -91,36 +84,39 @@ public class NetworkActivity extends AppCompatActivity {
             ArrayList[] dBms = new scannerAppTools().telephonyDBm(telephonyManager.getAllCellInfo());
             valList = dBms[0];
             ArrayList times = dBms[1];
+            ArrayList names = dBms[2];
+            ArrayList status = dBms[3];
 
-            if (times.size() > 0) {
+            if (names.size() == valList.size() && valList.size() == status.size()
+                    && times.size() > 0 && valList.size() > 0) {
+
                 time = (long) times.get(1);
+                String string = (time + " s");
+                timeTaken.setText(string);
 
-                if (valList.size() > 0) {
-                    double[] sums = new scannerAppTools().getMw(valList);
-                    int dBmSum = (int) Math.round(sums[0]);
-                    int nsum = (int) Math.round(sums[1]);
+                double[] sums = new scannerAppTools().getMw(valList);
+                int dBmSum = (int) Math.round(sums[0]);
+                int nsum = (int) Math.round(sums[1]);
 
-                    timeTaken.setText((int) time);
-                    arrayList = new ArrayList[]{valList, valList};
+                String exposure = (dBmSum + " dBm / " + "\n" + nsum + " ~nW");
+                exposurebox.setText(exposure);
 
-                    adapter.notifyDataSetChanged();
-
-                    String exposure = (dBmSum + " dBm / " + "\n" + nsum + " ~nW");
-                    exposurebox.setText(exposure);
-
-                    return 1;
-                } else {
-                    return 0;
+                for (int i = 0; i < names.size(); i++) {
+                    Object name = names.get(i);
+                    Object dBm = valList.get(i);
+                    Object inUse = status.get(i);
+                    String concat = (name + ": " + dBm + " dBm " + inUse);
+                    arrayList.add(concat);
                 }
+
+                adapter.notifyDataSetChanged();
+                return 1;
             } else {
                 return 0;
             }
         } else {
             return 1;
         }
-
-
-
     }
 
 
@@ -152,15 +148,6 @@ public class NetworkActivity extends AppCompatActivity {
         Intent intent = new Intent(this, WifiActivity.class);
         startActivity(intent);
         timer.cancel();
-    }
-
-    private long getValue(String fullS, String startS, String stopS) {
-        int index = fullS.indexOf(startS) + (startS).length();
-        int endIndex = fullS.indexOf(stopS, index);
-
-        String segment = fullS.substring(index, endIndex).trim();
-
-        return new Scanner(segment).useDelimiter("\\D+").nextLong();
     }
 
 }

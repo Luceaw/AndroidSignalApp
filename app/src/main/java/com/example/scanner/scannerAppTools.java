@@ -53,7 +53,7 @@ public class scannerAppTools {
                 time = (System.currentTimeMillis() - timeOfEvent) / 1000;
 
                 if (cellInfo.isRegistered()) {
-                    statusList.add("In use!");
+                    statusList.add(" - In use!");
                 } else {
                     statusList.add("");
                 }

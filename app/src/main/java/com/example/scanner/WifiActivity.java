@@ -25,12 +25,14 @@ public class WifiActivity extends AppCompatActivity {
 
     private WifiManager wifiManager;
     private ArrayList<String> arrayList = new ArrayList<>();
-    private ArrayList<Integer> valList = new ArrayList<>();
+    private ArrayList<Long> valList = new ArrayList<>();
     private ArrayAdapter adapter;
     long startime;
     private static DecimalFormat df = new DecimalFormat("0.00");
     private boolean wifiScanning;
     private boolean wifistart;
+    private TextView wifiText;
+    private TextView wifiExp;
 
     BroadcastReceiver wifiReceiver = new BroadcastReceiver() {
         @Override
@@ -41,74 +43,46 @@ public class WifiActivity extends AppCompatActivity {
 
             String time_taken = (((System.currentTimeMillis() - startime) / 1000) + "s");
             Toast.makeText(context, "Received", Toast.LENGTH_SHORT).show();
-            TextView textView = findViewById(R.id.timeText);
-            textView.setText(time_taken);
+
+            wifiText.setText(time_taken);
 
             for (ScanResult scanResult : results) {
                 String name = scanResult.SSID;
                 if (name.length() > 8) {
                     name = name.substring(0, 8);
                     name = (name + "...");
-                    arrayList.add(name + ": " + scanResult.level + "dBm / " + scanResult.frequency + "MHz / " + scanResult.channelWidth + " MHz");
+                    arrayList.add(name + ": " + scanResult.level + "dBm / " + scanResult.frequency + " MHz");
                 } else {
-                    arrayList.add(name + ": " + scanResult.level + " / " + scanResult.frequency + " / " + scanResult.channelWidth);
+                    arrayList.add(name + ": " + scanResult.level + "dBm / " + scanResult.frequency + " MHz");
                 }
-                valList.add(scanResult.level);
+                valList.add((long) scanResult.level);
                 adapter.notifyDataSetChanged();
             }
-
-            // I miss python
-            double Wsum = 0;
-            double dBm;
-            double mW;
-            for (int i = 0; i < valList.size(); i++) {
-                dBm = valList.get(i);
-                mW = Math.pow(10, ((dBm - 30) / 10));
-                Wsum += mW;
-            }
-            String nsum = df.format(Wsum * 1000000000);
-            String dBmSum = df.format(10 * (Math.log10(1000 * Wsum)));
-            String exposure = (dBmSum + " dBm / " + "\n" + nsum + " nW");
-            TextView textView2 = findViewById(R.id.exposureBox);
-            textView2.setText(exposure);
-
+            double[] result = new scannerAppTools().getMw(valList);
+            String exposure = (result[0] + " Sum dBm / ~" + result[1] + " nW");
+            wifiExp.setText(exposure);
         }
     };
 
-    private void scanWifi() throws InterruptedException {
 
-        if (System.currentTimeMillis() - startime > 10000) {
-            wifiScanning = false;
-        }
-
-        if (!wifiScanning) {
-
-            if (wifiManager != null) {
-
-                if (!wifiManager.isWifiEnabled()) {
-                    wifiManager.setWifiEnabled(true);
-                }
-
-                arrayList.clear();
-                valList.clear();
-                registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-                if (wifiManager.startScan()) {
-                    wifiScanning = true;
-                    Toast.makeText(this, "Scanning wifi....", Toast.LENGTH_LONG).show();
-                    startime = System.currentTimeMillis();
-                }
-            }
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if (wifiManager != null) {
+            wifistart = wifiManager.isWifiEnabled();
+        }
+
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_wifi);
+
         try {
             Objects.requireNonNull(this.getSupportActionBar()).hide();
         } catch (NullPointerException ignored) {
         }
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_wifi);
+
+        wifiText = findViewById(R.id.timeText);
+        wifiExp = findViewById(R.id.exposureBox);
+        ListView wifiList = findViewById(R.id.wifiList);
 
         arrayList.add("~~~ Router list ~~~");
 
@@ -116,21 +90,36 @@ public class WifiActivity extends AppCompatActivity {
         buttonScan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    scanWifi();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                scanWifi();
             }
         });
 
-        ListView listView = findViewById(R.id.wifiList);
         wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-
         adapter = new ArrayAdapter<>(this, R.layout.simple_list_item_1, arrayList);
-        listView.setAdapter(adapter);
-        if (wifiManager != null) {
-            wifistart = wifiManager.isWifiEnabled();
+        wifiList.setAdapter(adapter);
+    }
+
+    private void scanWifi() {
+        arrayList.clear();
+        valList.clear();
+
+        if (System.currentTimeMillis() - startime > 10000) {
+            wifiScanning = false;
+        }
+
+        if (!wifiScanning) {
+            if (wifiManager != null) {
+                if (!wifiManager.isWifiEnabled()) {
+                    wifiManager.setWifiEnabled(true);
+                }
+
+                registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+                if (wifiManager.startScan()) {
+                    wifiScanning = true;
+                    Toast.makeText(this, "Scanning wifi....", Toast.LENGTH_SHORT).show();
+                    startime = System.currentTimeMillis();
+                }
+            }
         }
     }
 
