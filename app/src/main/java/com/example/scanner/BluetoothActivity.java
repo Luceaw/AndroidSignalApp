@@ -40,7 +40,7 @@ public class BluetoothActivity extends AppCompatActivity {
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 long rssi = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI, Short.MIN_VALUE);
                 String name = intent.getStringExtra(BluetoothDevice.EXTRA_NAME);
-                arrayList.add(name + ": " + rssi + " dBm");
+                arrayList.add(name + ": " + rssi + " RSSI");
                 adapter.notifyDataSetChanged();
                 blueList.add(rssi);
                 TextView blueExp = findViewById(R.id.exposureBox);

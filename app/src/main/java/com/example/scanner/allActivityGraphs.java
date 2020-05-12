@@ -7,23 +7,31 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.net.Uri;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.telephony.CellInfo;
 import android.telephony.TelephonyManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.PointsGraphSeries;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -33,6 +41,16 @@ import java.util.TimerTask;
 public class allActivityGraphs extends AppCompatActivity {
 
     private ArrayList<Long> blueList = new ArrayList<>();
+    long blueTime;
+    long netTime;
+    long wifiTime;
+    private StringBuilder combinedData = new StringBuilder();
+    private ArrayList<Long> wifiList = new ArrayList<>();
+    private WifiManager wifiManager;
+    private BluetoothAdapter bluetoothAdapter;
+    private TelephonyManager telephonyManager;
+
+    private LineGraphSeries<DataPoint> blueSeries;
     BroadcastReceiver bluereceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             blueTime = System.currentTimeMillis();
@@ -45,50 +63,12 @@ public class allActivityGraphs extends AppCompatActivity {
                 double[] sums = new scannerAppTools().getMw(blueList);
                 int yVal = (int) Math.round(sums[0]);
                 int xVal = Math.round(System.currentTimeMillis() - startTime) / 1000;
-                blueSeries.appendData(new DataPoint(xVal, yVal), true, 500);
+                blueSeries.appendData(new DataPoint(xVal, yVal), true, 1000);
+                combinedData.append("\n").append(xVal + ",").append(yVal);
             }
         }
     };
-    private ArrayList<Long> wifiList = new ArrayList<>();
-
-    long blueTime;
-    long netTime;
-    long wifiTime;
-
-    private WifiManager wifiManager;
-    private BluetoothAdapter bluetoothAdapter;
-    private TelephonyManager telephonyManager;
-
-    private LineGraphSeries<DataPoint> blueSeries;
     private LineGraphSeries<DataPoint> netSeries;
-    BroadcastReceiver wifiReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            unregisterReceiver(wifiReceiver);
-            List<ScanResult> results = wifiManager.getScanResults();
-            wifiTime = System.currentTimeMillis();
-            for (ScanResult scanResult : results) {
-                wifiList.add((long) scanResult.level);
-            }
-
-            if (wifiList.size() > 0) {
-                double[] sums = new scannerAppTools().getMw(wifiList);
-                int yVal = (int) Math.round(sums[0]);
-                int xVal = Math.round(System.currentTimeMillis() - startTime) / 1000;
-                wifiSeries.appendData(new DataPoint(xVal, yVal), true, 500);
-            }
-            startWifi();
-        }
-    };
-    private LineGraphSeries<DataPoint> wifiSeries;
-    private ArrayList netList = new ArrayList<>();
-    private PointsGraphSeries<DataPoint> netPointSeries;
-    private Timer timer = new Timer();
-    private boolean running = false;
-
-    private long startTime;
-    private boolean blueStartOn;
-
     public TelephonyManager.CellInfoCallback cellInfoCallback = new TelephonyManager.CellInfoCallback() {
         @Override
         public void onCellInfo(@NonNull List<CellInfo> cellInfo) {
@@ -105,13 +85,46 @@ public class allActivityGraphs extends AppCompatActivity {
                 double[] sums = new scannerAppTools().getMw(netList);
                 int yVal = (int) Math.round(sums[0]);
                 int xVal = Math.round(System.currentTimeMillis() - startTime) / 1000;
-                netSeries.appendData(new DataPoint(xVal, yVal), true, 2000);
+                netSeries.appendData(new DataPoint(xVal, yVal), true, 4000);
                 if (time < 101) {
-                    netPointSeries.appendData(new DataPoint(xVal, yVal), true, 500);
+                    netPointSeries.appendData(new DataPoint(xVal, yVal), true, 1000);
+                    combinedData.append("\n").append(xVal + ",,").append(yVal);
                 }
             }
         }
     };
+    private LineGraphSeries<DataPoint> wifiSeries;
+
+    private ArrayList netList = new ArrayList<>();
+    private PointsGraphSeries<DataPoint> netPointSeries;
+    private Timer timer = new Timer();
+    private boolean running = false;
+
+    private long startTime;
+    private boolean blueStartOn;
+    BroadcastReceiver wifiReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            unregisterReceiver(wifiReceiver);
+            List<ScanResult> results = wifiManager.getScanResults();
+            wifiTime = System.currentTimeMillis();
+            for (ScanResult scanResult : results) {
+                wifiList.add((long) scanResult.level);
+            }
+
+            if (wifiList.size() > 0) {
+                double[] sums = new scannerAppTools().getMw(wifiList);
+                int yVal = (int) Math.round(sums[0]);
+                int xVal = Math.round(System.currentTimeMillis() - startTime) / 1000;
+                wifiSeries.appendData(new DataPoint(xVal, yVal), true, 1000);
+                combinedData.append("\n").append(xVal + ",,,").append(yVal);
+            }
+            startWifi();
+        }
+    };
+    private Switch screenSwitch;
+    private EditText xMaxText;
+    private GraphView graph;
 
     private boolean wifistartOn;
 
@@ -142,7 +155,7 @@ public class allActivityGraphs extends AppCompatActivity {
         blueTime = System.currentTimeMillis();
         wifiTime = System.currentTimeMillis();
 
-        GraphView graph = findViewById(R.id.graph);
+        graph = findViewById(R.id.graph);
         blueSeries = new LineGraphSeries<>(new DataPoint[]{new DataPoint(-1, -121), new DataPoint(-0, -121)});
         netSeries = new LineGraphSeries<>(new DataPoint[]{new DataPoint(-1, -121), new DataPoint(-0, -121)});
         netPointSeries = new PointsGraphSeries<>(new DataPoint[]{new DataPoint(-1, -121), new DataPoint(-0, -121)});
@@ -191,6 +204,27 @@ public class allActivityGraphs extends AppCompatActivity {
 
         graph.getGridLabelRenderer().reloadStyles();
 
+        screenSwitch = findViewById(R.id.screenSwitch);
+        xMaxText = findViewById(R.id.graphMax);
+        xMaxText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                setGraph();
+            }
+        });
+
+        combinedData.append("Time,Sum_Bluetooth_RSSI,Sum_Cell_dBm,Sum_Wifi_dBm");
+
     }
 
     public void startBluetooth() throws InterruptedException {
@@ -212,8 +246,63 @@ public class allActivityGraphs extends AppCompatActivity {
             }
         } else {
             int xVal = Math.round(System.currentTimeMillis() - startTime) / 1000;
-            blueSeries.appendData(new DataPoint(xVal, -119), true, 500);
+            blueSeries.appendData(new DataPoint(xVal, -119), true, 1000);
         }
+    }
+
+    public void screenOn(View view) {
+        if (screenSwitch != null) {
+            if (screenSwitch.isChecked()) {
+                view.setKeepScreenOn(true);
+            } else {
+                view.setKeepScreenOn(false);
+            }
+        }
+    }
+
+
+    public void exportData(View view) {
+        try {
+            FileOutputStream out = this.openFileOutput("data.csv", Context.MODE_PRIVATE);
+            out.write(combinedData.toString().getBytes());
+            out.close();
+
+            Context context = getApplicationContext();
+            File savedfile = new File(getFilesDir(), "data.csv");
+            Uri path = FileProvider.getUriForFile(context, "com.example.scanner.fileprovider", savedfile);
+            Intent fileIntent = new Intent(Intent.ACTION_SEND);
+            fileIntent.setType("text/csv");
+            fileIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            fileIntent.putExtra(Intent.EXTRA_STREAM, path);
+            startActivity(Intent.createChooser(fileIntent, "Export data"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    public int isInt(String strNum) {
+        int d;
+        if (strNum == null) {
+            return 60;
+        }
+        try {
+            d = Integer.parseInt(strNum);
+        } catch (NumberFormatException nfe) {
+            return 60;
+        }
+        return d;
+    }
+
+    public void setGraph() {
+
+        if (xMaxText.getText() != null) {
+            String text = xMaxText.getText().toString();
+            graph.getViewport().setMinX(0);
+            graph.getViewport().setMaxX(isInt(text));
+        }
+
     }
 
     public void scanAll(View view) throws InterruptedException {

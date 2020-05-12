@@ -9,7 +9,6 @@
     tools:context=".allActivityGraphs">
 
 
-
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineBtn"
         android:layout_width="wrap_content"
@@ -37,14 +36,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.2" />
+        app:layout_constraintGuide_percent="0.18" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/graphbottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.71" />
+        app:layout_constraintGuide_percent="0.69" />
 
 
     <androidx.constraintlayout.widget.Guideline
@@ -69,7 +68,6 @@
         app:layout_constraintGuide_percent="0.23" />
 
 
-
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineTitle"
         android:layout_width="wrap_content"
@@ -89,7 +87,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.14" />
+        app:layout_constraintGuide_percent="0.12" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/LegendBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.16" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineheaderRight"
@@ -105,12 +110,6 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.84" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/LegendBottom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.18" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/SignalHeaderRight"
@@ -164,15 +163,14 @@
             android:autoSizeMinTextSize="12sp"
             android:autoSizeTextType="uniform"
             android:gravity="center"
-            android:text= "Legend:"
+            android:text="Legend:"
             android:textColor="@color/red_700"
             android:textStyle="bold" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.1"
-            />
+            android:layout_weight="0.1" />
 
         <TextView
             android:id="@+id/blueColName"
@@ -187,11 +185,11 @@
             android:text=" B: Bluetooth "
             android:textColor="@color/trueBlack"
             android:textStyle="bold" />
+
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.1"
-            />
+            android:layout_weight="0.1" />
 
         <TextView
             android:id="@+id/netColName"
@@ -211,8 +209,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.1"
-            />
+            android:layout_weight="0.1" />
 
         <TextView
             android:id="@+id/wifiColName"
@@ -243,6 +240,40 @@
         app:seriesColor="#ee0000"
         app:seriesType="line" />
 
+    <Switch
+        android:id="@+id/screenSwitch"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:autoSizeMaxTextSize="100sp"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeTextType="uniform"
+        android:background="@color/red_300"
+        android:gravity="center"
+        android:onClick="screenOn"
+        android:text="Keep Screen On"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/switchbottom"
+        app:layout_constraintEnd_toStartOf="@+id/switchLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/switchtop" />
+
+
+    <Button
+        android:id="@+id/exportButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:autoSizeMaxTextSize="100sp"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeTextType="uniform"
+        android:background="@color/green_700"
+        android:gravity="center"
+        android:onClick="exportData"
+        android:text="Export Data to Timestamp_data.csv"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toTopOf="@+id/switchbottom"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/switchLayout"
+        app:layout_constraintTop_toTopOf="@+id/switchtop" />
 
     <Button
         android:id="@+id/switchLayout"
@@ -261,6 +292,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/switchtop" />
+
 
     <Button
         android:id="@+id/scanBtn"
@@ -394,6 +426,41 @@
             android:text=".    Wifi    ."
             android:textAllCaps="false" />
     </LinearLayout>
+
+    <EditText
+        android:id="@+id/graphMax"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:autoSizeMaxTextSize="100sp"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeTextType="uniform"
+        android:background="@color/listwhite"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text="60"
+        android:textColor="@color/green_100"
+        app:layout_constraintBottom_toTopOf="@+id/switchtop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/exportButton"
+        app:layout_constraintTop_toTopOf="@+id/graphbottom" />
+
+    <TextView
+        android:id="@+id/graphmaxtext"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:autoSizeMaxTextSize="100sp"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeTextType="uniform"
+        android:background="@color/listwhite"
+        android:gravity="center"
+        android:maxLines="1"
+        android:padding="3dp"
+        android:text="Graph X Axis Max (s):"
+        android:textColor="@color/green_100"
+        app:layout_constraintBottom_toTopOf="@+id/switchtop"
+        app:layout_constraintEnd_toStartOf="@+id/graphMax"
+        app:layout_constraintStart_toEndOf="@+id/screenSwitch"
+        app:layout_constraintTop_toTopOf="@+id/graphbottom" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
