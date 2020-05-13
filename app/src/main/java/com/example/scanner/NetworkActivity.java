@@ -31,29 +31,6 @@ public class NetworkActivity extends AppCompatActivity {
     private ArrayAdapter adapter;
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-
-        running = false;
-
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_network);
-
-        try {
-            Objects.requireNonNull(this.getSupportActionBar()).hide();
-        } catch (NullPointerException ignored) {
-        }
-
-        arrayList.add("Press retrieve to get results");
-        ListView listView = findViewById(R.id.networkList);
-        adapter = new ArrayAdapter<>(this, R.layout.simple_list_item_1, arrayList);
-        listView.setAdapter(adapter);
-
-        timeTaken = findViewById(R.id.timeText);
-        exposurebox = findViewById(R.id.exposureBox);
-
-    }
-
     public TelephonyManager.CellInfoCallback cellInfoCallback = new TelephonyManager.CellInfoCallback() {
         @Override
         public void onCellInfo(@NonNull List<CellInfo> cellInfo) {
@@ -75,7 +52,7 @@ public class NetworkActivity extends AppCompatActivity {
                 int dBmSum = (int) Math.round(sums[0]);
                 int nsum = (int) Math.round(sums[1]);
 
-                String exposure = (dBmSum + " dBm / " + "\n" + nsum + " ~nW");
+                String exposure = ("~" + dBmSum + " dBm / " + "\n" + nsum + " ~nW");
                 exposurebox.setText(exposure);
 
                 for (int i = 0; i < names.size(); i++) {
@@ -89,6 +66,29 @@ public class NetworkActivity extends AppCompatActivity {
             }
         }
     };
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+
+        running = false;
+
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_network);
+
+        try {
+            Objects.requireNonNull(this.getSupportActionBar()).hide();
+        } catch (NullPointerException ignored) {
+        }
+
+        arrayList.add("Press Retrieve to get results");
+        ListView listView = findViewById(R.id.networkList);
+        adapter = new ArrayAdapter<>(this, R.layout.simple_list_item_1, arrayList);
+        listView.setAdapter(adapter);
+
+        timeTaken = findViewById(R.id.timeText);
+        exposurebox = findViewById(R.id.exposureBox);
+
+    }
 
     public void scanNetworks(View view) {
         if (!running) {

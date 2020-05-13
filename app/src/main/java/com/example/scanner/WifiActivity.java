@@ -57,7 +57,7 @@ public class WifiActivity extends AppCompatActivity {
                 adapter.notifyDataSetChanged();
             }
             double[] result = new scannerAppTools().getMw(valList);
-            String exposure = (result[0] + " Sum dBm / ~" + result[1] + " nW");
+            String exposure = ("~" + result[0] + " Sum dBm / ~" + result[1] + " nW");
             wifiExp.setText(exposure);
         }
     };

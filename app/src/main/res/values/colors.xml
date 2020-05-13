@@ -24,6 +24,7 @@
 
     <color name="red_100">#F44336</color>
     <color name="red_300">#3F51B5</color>
+    <color name="screen_blue">#4056D5</color>
     <color name="red_500">#9C27B0</color>
     <color name="red_700">#2196F3</color>
     <color name="blue_100">#00BCD4</color>

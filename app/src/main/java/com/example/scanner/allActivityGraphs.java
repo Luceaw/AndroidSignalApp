@@ -32,8 +32,11 @@ import com.jjoe64.graphview.series.PointsGraphSeries;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -223,7 +226,7 @@ public class allActivityGraphs extends AppCompatActivity {
             }
         });
 
-        combinedData.append("Time,Sum_Bluetooth_RSSI,Sum_Cell_dBm,Sum_Wifi_dBm");
+        combinedData.append("Time (s),Sum Bluetooth (RSSI),Sum Cell (dBm),Sum Wifi (dBm)");
 
     }
 
@@ -263,17 +266,22 @@ public class allActivityGraphs extends AppCompatActivity {
 
     public void exportData(View view) {
         try {
-            FileOutputStream out = this.openFileOutput("data.csv", Context.MODE_PRIVATE);
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy_HH:mm:ss", Locale.getDefault());
+            String date = formatter.format(new Date());
+            String filename = "Inaccurate_Signal_Data_" + date + ".csv";
+            FileOutputStream out = this.openFileOutput(filename, Context.MODE_PRIVATE);
             out.write(combinedData.toString().getBytes());
             out.close();
 
             Context context = getApplicationContext();
-            File savedfile = new File(getFilesDir(), "data.csv");
+            File savedfile = new File(getFilesDir(), filename);
             Uri path = FileProvider.getUriForFile(context, "com.example.scanner.fileprovider", savedfile);
+
             Intent fileIntent = new Intent(Intent.ACTION_SEND);
             fileIntent.setType("text/csv");
             fileIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             fileIntent.putExtra(Intent.EXTRA_STREAM, path);
+            fileIntent.putExtra(Intent.EXTRA_TITLE, filename);
             startActivity(Intent.createChooser(fileIntent, "Export data"));
         } catch (Exception e) {
             e.printStackTrace();
@@ -307,6 +315,7 @@ public class allActivityGraphs extends AppCompatActivity {
 
     public void scanAll(View view) throws InterruptedException {
         if (!running) {
+            startTime = System.currentTimeMillis();
             startBluetooth();
             startWifi();
             TimerTask timerTask = new TimerTask() {

@@ -46,7 +46,7 @@ public class BluetoothActivity extends AppCompatActivity {
                 TextView blueExp = findViewById(R.id.exposureBox);
 
                 double[] result = new scannerAppTools().getMw(blueList);
-                String exposure = (result[0] + " Sum RSSI");
+                String exposure = ("~" + result[0] + " False Sum RSSI");
                 blueExp.setText(exposure);
             }
         }
