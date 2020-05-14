@@ -25,7 +25,7 @@ public class splash_activity extends AppCompatActivity {
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH)
                 != PackageManager.PERMISSION_GRANTED) {
-            // Permission is not granted
+            // Permission is not granted TODO: check for and request permissions
         }
     }
 

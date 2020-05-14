@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Objects;
 
-
+// Just a home page with buttons for app activities
 public class MainActivity extends AppCompatActivity {
 
     @Override

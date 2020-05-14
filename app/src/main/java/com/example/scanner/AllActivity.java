@@ -41,6 +41,7 @@ public class AllActivity extends AppCompatActivity {
     private TelephonyManager telephonyManager;
 
     private TextView wifiExp;
+    // Broadcast receiver for Wifi scan
     BroadcastReceiver wifiReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -52,7 +53,6 @@ public class AllActivity extends AppCompatActivity {
             }
 
             if (wifiList.size() > 0) {
-
                 double[] result = new scannerAppTools().getMw(wifiList);
                 changeSize(result[0], "wifiBox");
                 String exposure = (result[0] + " Sum dBm / ~" + result[1] + " nW");
@@ -63,6 +63,7 @@ public class AllActivity extends AppCompatActivity {
     };
     private TextView netExp;
     private TextView blueExp;
+    // Broadcast receiver for Bluetooth Scan
     BroadcastReceiver bluereceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             blueTime = System.currentTimeMillis();
@@ -79,13 +80,9 @@ public class AllActivity extends AppCompatActivity {
             }
         }
     };
-    private TextView wifiText;
-
-    private Timer timer = new Timer();
-    private boolean running = false;
     private TextView blueText;
-    private boolean wifistartOn;
     private TextView netText;
+    // Callback for cell info
     public TelephonyManager.CellInfoCallback cellInfoCallback = new TelephonyManager.CellInfoCallback() {
         @Override
         public void onCellInfo(@NonNull List<CellInfo> cellInfo) {
@@ -99,20 +96,20 @@ public class AllActivity extends AppCompatActivity {
             if (names.size() == netList.size() && netList.size() == status.size()
                     && times.size() > 0 && netList.size() > 0) {
                 time = (long) times.get(1);
-
                 double[] result = new scannerAppTools().getMw(netList);
                 changeSize(result[0], "networkBox");
-
                 String timeString = ((int) time + " s");
                 String exposure = (result[0] + " Sum dBm / ~" + result[1] + " nW");
                 netExp.setText(exposure);
                 netText.setText(timeString);
-
             }
         }
     };
-
+    private TextView wifiText;
+    private Timer timer = new Timer();
+    private boolean running = false;
     private boolean blueStartOn;
+    private boolean wifistartOn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,10 +124,10 @@ public class AllActivity extends AppCompatActivity {
         }
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        telephonyManager = (TelephonyManager) getApplicationContext()
-                .getSystemService(Context.TELEPHONY_SERVICE);
+        telephonyManager = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
         wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
+        // Record start state
         if (bluetoothAdapter != null) {
             blueStartOn = bluetoothAdapter.isEnabled();
         }
@@ -148,19 +145,59 @@ public class AllActivity extends AppCompatActivity {
         wifiText = findViewById(R.id.wifiTime);
         blueText = findViewById(R.id.blueTime);
         netText = findViewById(R.id.netTime);
-
     }
 
-    public void startBluetooth() throws InterruptedException {
+    // Main scan loop
+    public void scanAll(View view) {
+        if (!running) {
+            startBluetooth();
+            startWifi();
+            TimerTask timerTask = new TimerTask() {
+                @Override
+                public void run() {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            getNetwork();
+                            running = true;
+                        }
+                    });
+                }
+            };
+            timer.schedule(timerTask, 0, 100);
+        }
+    }
 
+    // Cell Network results method, called on a loop
+    public void getNetwork() {
+        startBluetooth(); // Call on a loop to avoid sleep
+
+        // Update result times
+        String wifitimetaken = (((System.currentTimeMillis() - wifiTime) / 1000) + " s");
+        wifiText.setText(wifitimetaken);
+
+        String bluetimetaken = (((System.currentTimeMillis() - blueTime) / 1000) + " s");
+        blueText.setText(bluetimetaken);
+
+        if (System.currentTimeMillis() - blueTime > 10000) {
+            blueList.clear();
+            TextView textView = findViewById(R.id.bluetoothBox);
+            textView.setText("");
+        }
+
+        netList.clear();
+        netTime = System.currentTimeMillis();
+        if (telephonyManager != null) {
+            telephonyManager.requestCellInfoUpdate(this.getMainExecutor(), cellInfoCallback);
+        }
+    }
+
+    // Bluetooth results method
+    public void startBluetooth() {
         if (bluetoothAdapter != null) {
             if (!bluetoothAdapter.isEnabled()) {
                 bluetoothAdapter.enable();
-                long start = System.currentTimeMillis();
-                while ((System.currentTimeMillis() - start) < 3000 && (!bluetoothAdapter.isEnabled())) {
-                    Thread.sleep(50);
-                }
-            } else {
+            } else { // Second pass if not enabled to start with, always true
                 if (!bluetoothAdapter.isDiscovering()) {
                     blueList.clear();
                     IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
@@ -173,52 +210,7 @@ public class AllActivity extends AppCompatActivity {
         }
     }
 
-    public void scanAll(View view) throws InterruptedException {
-        if (!running) {
-            startBluetooth();
-            startWifi();
-            TimerTask timerTask = new TimerTask() {
-                @Override
-                public void run() {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                getNetwork();
-                                running = true;
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-                }
-            };
-            timer.schedule(timerTask, 0, 100);
-        }
-    }
-
-    public void getNetwork() throws InterruptedException {
-
-        String wifitimetaken = (((System.currentTimeMillis() - wifiTime) / 1000) + " s");
-        wifiText.setText(wifitimetaken);
-
-        String bluetimetaken = (((System.currentTimeMillis() - blueTime) / 1000) + " s");
-        blueText.setText(bluetimetaken);
-
-        if (System.currentTimeMillis() - blueTime > 10000) {
-            blueList.clear();
-            TextView textView = findViewById(R.id.bluetoothBox);
-            textView.setText("");
-            startBluetooth();
-        }
-
-        netList.clear();
-        netTime = System.currentTimeMillis();
-        if (telephonyManager != null) {
-            telephonyManager.requestCellInfoUpdate(this.getMainExecutor(), cellInfoCallback);
-        }
-    }
-
+    // Wifi results method
     private void startWifi() {
         wifiList.clear();
         if (wifiManager != null) {
@@ -230,6 +222,7 @@ public class AllActivity extends AppCompatActivity {
         }
     }
 
+    // Return to start state on activity change
     public void onPause() {
         super.onPause();
         try {
@@ -270,6 +263,7 @@ public class AllActivity extends AppCompatActivity {
 
     }
 
+    // Change size of the boxes according to their values
     private void changeSize(double dbDouble, String viewString) {
         int dbInt = (int) Math.round(dbDouble);
         int id = getResources().getIdentifier(viewString, "id", getPackageName());
@@ -286,6 +280,7 @@ public class AllActivity extends AppCompatActivity {
         timer = new Timer();
     }
 
+    // Buttons
     public void goHome(View view) {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);

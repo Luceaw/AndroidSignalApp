@@ -32,6 +32,8 @@ public class BluetoothActivity extends AppCompatActivity {
     private boolean blueStartOn;
     private boolean scanning;
     int i = 0;
+
+    // Broadcast receiver to Bluetooth Action Found; add results to list and update.
     private BroadcastReceiver bluereceiver = new BroadcastReceiver() {
 
         public void onReceive(Context context, Intent intent) {
@@ -44,10 +46,9 @@ public class BluetoothActivity extends AppCompatActivity {
                 adapter.notifyDataSetChanged();
                 blueList.add(rssi);
                 TextView blueExp = findViewById(R.id.exposureBox);
-
                 double[] result = new scannerAppTools().getMw(blueList);
                 String exposure = ("~" + result[0] + " False Sum RSSI");
-                blueExp.setText(exposure); 
+                blueExp.setText(exposure);
             }
         }
     };
@@ -76,13 +77,13 @@ public class BluetoothActivity extends AppCompatActivity {
     public void scanBluetooth(View view) throws InterruptedException {
         if (!scanning) {
             scanning = true;
-            i = 0;
 
             arrayList.clear();
             blueList.clear();
             adapter.notifyDataSetChanged();
 
             if (bluetoothAdapter != null) {
+                // Check if Bluetooth is enabled and enable it if not.
                 if (!bluetoothAdapter.isEnabled()) {
                     blueStartOn = false;
                     bluetoothAdapter.enable();
@@ -95,12 +96,15 @@ public class BluetoothActivity extends AppCompatActivity {
                     blueStartOn = true;
                 }
 
+                // Set up receiver for finding finding a bluetooth device
                 IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
                 registerReceiver(bluereceiver, filter);
 
                 bluetoothAdapter.startDiscovery();
-                Toast.makeText(this, "Scanning Bluetooth", Toast.LENGTH_SHORT).show();
 
+                // Progress bar
+                Toast.makeText(this, "Scanning Bluetooth", Toast.LENGTH_SHORT).show();
+                i = 0;
                 new CountDownTimer(5000, 100) {
                     @Override
                     public void onTick(long millisUntilFinished) {
@@ -128,6 +132,8 @@ public class BluetoothActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         super.onPause();
+
+        // Unregister Bluetooth Receiver; return bluetooth to original state.
         try {
             unregisterReceiver(bluereceiver);
         } catch (Exception e) {
@@ -154,6 +160,7 @@ public class BluetoothActivity extends AppCompatActivity {
     }
 
 
+// Buttons
 
     public void goHome(View view) {
         Intent intent = new Intent(this, MainActivity.class);

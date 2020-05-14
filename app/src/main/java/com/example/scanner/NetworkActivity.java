@@ -30,17 +30,19 @@ public class NetworkActivity extends AppCompatActivity {
     private TextView exposurebox;
     private ArrayAdapter adapter;
 
-
+    // Cell In for Callback for retrieved results
     public TelephonyManager.CellInfoCallback cellInfoCallback = new TelephonyManager.CellInfoCallback() {
         @Override
         public void onCellInfo(@NonNull List<CellInfo> cellInfo) {
             long time;
+            // Process results
             ArrayList[] dBms = new scannerAppTools().telephonyDBm(cellInfo);
             valList = dBms[0];
             ArrayList times = dBms[1];
             ArrayList names = dBms[2];
             ArrayList status = dBms[3];
 
+            // If returned data is complete
             if (names.size() == valList.size() && valList.size() == status.size()
                     && times.size() > 0 && valList.size() > 0) {
 
@@ -48,13 +50,16 @@ public class NetworkActivity extends AppCompatActivity {
                 String string = (time + " ms");
                 timeTaken.setText(string);
 
+                // Calculate sum values
                 double[] sums = new scannerAppTools().getMw(valList);
                 int dBmSum = (int) Math.round(sums[0]);
                 int nsum = (int) Math.round(sums[1]);
 
+                // Set exposure
                 String exposure = ("~" + dBmSum + " dBm / " + "\n" + nsum + " ~nW");
                 exposurebox.setText(exposure);
 
+                // Set list values and update list
                 for (int i = 0; i < names.size(); i++) {
                     Object name = names.get(i);
                     Object dBm = valList.get(i);
@@ -69,9 +74,7 @@ public class NetworkActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         running = false;
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_network);
 
@@ -91,6 +94,7 @@ public class NetworkActivity extends AppCompatActivity {
     }
 
     public void scanNetworks(View view) {
+        // Does not actually scan so just retrieve the already-present results on a loop.
         if (!running) {
             TimerTask timerTask = new TimerTask() {
                 @Override
@@ -109,6 +113,7 @@ public class NetworkActivity extends AppCompatActivity {
     }
 
     public void getResults() {
+        // Request a scan from loop; rate limited so partially in vain.
         arrayList.clear();
         valList.clear();
         startime = System.currentTimeMillis();
@@ -120,34 +125,38 @@ public class NetworkActivity extends AppCompatActivity {
     }
 
 
+    // Cancel timer if activity changes.
+    @Override
+    public void onPause() {
+        super.onPause();
+        timer.cancel();
+    }
+
+    // Buttons
+
     public void goHome(View view) {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
-        timer.cancel();
     }
 
     public void goAll(View view) {
         Intent intent = new Intent(this, allActivityGraphs.class);
         startActivity(intent);
-        timer.cancel();
     }
 
     public void goBluetooth(View view) {
         Intent intent = new Intent(this, BluetoothActivity.class);
         startActivity(intent);
-        timer.cancel();
     }
 
     public void goNetwork(View view) {
         Intent intent = new Intent(this, NetworkActivity.class);
         startActivity(intent);
-        timer.cancel();
     }
 
     public void goWifi(View view) {
         Intent intent = new Intent(this, WifiActivity.class);
         startActivity(intent);
-        timer.cancel();
     }
 
 }

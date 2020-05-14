@@ -54,6 +54,16 @@ public class allActivityGraphs extends AppCompatActivity {
     private TelephonyManager telephonyManager;
 
     private LineGraphSeries<DataPoint> blueSeries;
+    private LineGraphSeries<DataPoint> netSeries;
+    private LineGraphSeries<DataPoint> wifiSeries;
+
+    private ArrayList netList = new ArrayList<>();
+    private PointsGraphSeries<DataPoint> netPointSeries;
+    private Timer timer = new Timer();
+    private boolean running = false;
+
+    private long startTime;
+    // Broadcast receiver for Bluetooth Scan
     BroadcastReceiver bluereceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             blueTime = System.currentTimeMillis();
@@ -67,11 +77,11 @@ public class allActivityGraphs extends AppCompatActivity {
                 int yVal = (int) Math.round(sums[0]);
                 int xVal = Math.round(System.currentTimeMillis() - startTime) / 1000;
                 blueSeries.appendData(new DataPoint(xVal, yVal), true, 1000);
-                combinedData.append("\n").append(xVal + ",").append(yVal);
+                combinedData.append("\n").append(xVal).append(",").append(yVal);
             }
         }
     };
-    private LineGraphSeries<DataPoint> netSeries;
+    // Callback for cell info
     public TelephonyManager.CellInfoCallback cellInfoCallback = new TelephonyManager.CellInfoCallback() {
         @Override
         public void onCellInfo(@NonNull List<CellInfo> cellInfo) {
@@ -91,20 +101,12 @@ public class allActivityGraphs extends AppCompatActivity {
                 netSeries.appendData(new DataPoint(xVal, yVal), true, 4000);
                 if (time < 101) {
                     netPointSeries.appendData(new DataPoint(xVal, yVal), true, 1000);
-                    combinedData.append("\n").append(xVal + ",,").append(yVal);
+                    combinedData.append("\n").append(xVal).append(",,").append(yVal);
                 }
             }
         }
     };
-    private LineGraphSeries<DataPoint> wifiSeries;
-
-    private ArrayList netList = new ArrayList<>();
-    private PointsGraphSeries<DataPoint> netPointSeries;
-    private Timer timer = new Timer();
-    private boolean running = false;
-
-    private long startTime;
-    private boolean blueStartOn;
+    // Broadcast receiver for Wifi scan
     BroadcastReceiver wifiReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -120,16 +122,18 @@ public class allActivityGraphs extends AppCompatActivity {
                 int yVal = (int) Math.round(sums[0]);
                 int xVal = Math.round(System.currentTimeMillis() - startTime) / 1000;
                 wifiSeries.appendData(new DataPoint(xVal, yVal), true, 1000);
-                combinedData.append("\n").append(xVal + ",,,").append(yVal);
+                combinedData.append("\n").append(xVal).append(",,,").append(yVal);
             }
             startWifi();
         }
     };
+    private boolean blueStartOn;
     private Switch screenSwitch;
     private EditText xMaxText;
     private GraphView graph;
-
     private boolean wifistartOn;
+    private long onTime = 0;
+    private boolean debug = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,6 +152,7 @@ public class allActivityGraphs extends AppCompatActivity {
         telephonyManager = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
         wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
+        // Record start state
         if (bluetoothAdapter != null) {
             blueStartOn = bluetoothAdapter.isEnabled();
         }
@@ -158,6 +163,7 @@ public class allActivityGraphs extends AppCompatActivity {
         blueTime = System.currentTimeMillis();
         wifiTime = System.currentTimeMillis();
 
+        // Make graph
         graph = findViewById(R.id.graph);
         blueSeries = new LineGraphSeries<>(new DataPoint[]{new DataPoint(-1, -121), new DataPoint(-0, -121)});
         netSeries = new LineGraphSeries<>(new DataPoint[]{new DataPoint(-1, -121), new DataPoint(-0, -121)});
@@ -209,53 +215,29 @@ public class allActivityGraphs extends AppCompatActivity {
 
         screenSwitch = findViewById(R.id.screenSwitch);
         xMaxText = findViewById(R.id.graphMax);
+
+        // Set text listener to modify graph
         xMaxText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
-
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
-
             @Override
             public void afterTextChanged(Editable editable) {
                 setGraph();
             }
         });
-
         combinedData.append("Time (s),Sum Bluetooth (RSSI),Sum Cell (dBm),Sum Wifi (dBm)");
-
     }
 
-    public void startBluetooth() throws InterruptedException {
 
-        if (bluetoothAdapter != null) {
-            if (!bluetoothAdapter.isEnabled()) {
-                bluetoothAdapter.enable();
-                long start = System.currentTimeMillis();
-                while ((System.currentTimeMillis() - start) < 3000 && (!bluetoothAdapter.isEnabled())) {
-                    Thread.sleep(50);
-                }
-            } else {
-                if (!bluetoothAdapter.isDiscovering()) {
-                    blueList.clear();
-                    IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-                    registerReceiver(bluereceiver, filter);
-                    bluetoothAdapter.startDiscovery();
-                }
-            }
-        } else {
-            int xVal = Math.round(System.currentTimeMillis() - startTime) / 1000;
-            blueSeries.appendData(new DataPoint(xVal, -119), true, 1000);
-        }
-    }
-
+    // Button to keep screen on
     public void screenOn(View view) {
         if (screenSwitch != null) {
             if (screenSwitch.isChecked()) {
+                onTime = System.currentTimeMillis();
                 view.setKeepScreenOn(true);
             } else {
                 view.setKeepScreenOn(false);
@@ -263,9 +245,10 @@ public class allActivityGraphs extends AppCompatActivity {
         }
     }
 
-
+    // Export data button
     public void exportData(View view) {
         try {
+            // Append date-time to default file name
             SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy_HH:mm:ss", Locale.getDefault());
             String date = formatter.format(new Date());
             String filename = "Inaccurate_Signal_Data_" + date + ".csv";
@@ -273,6 +256,7 @@ public class allActivityGraphs extends AppCompatActivity {
             out.write(combinedData.toString().getBytes());
             out.close();
 
+            // Export the file
             Context context = getApplicationContext();
             File savedfile = new File(getFilesDir(), filename);
             Uri path = FileProvider.getUriForFile(context, "com.example.scanner.fileprovider", savedfile);
@@ -286,10 +270,9 @@ public class allActivityGraphs extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
 
+    // Check if user added int to graph x axis modifier; return value if true else set to default
     public int isInt(String strNum) {
         int d;
         if (strNum == null) {
@@ -300,20 +283,21 @@ public class allActivityGraphs extends AppCompatActivity {
         } catch (NumberFormatException nfe) {
             return 60;
         }
+        debug = d == -1234;
         return d;
     }
 
+    // Graph x-axis modifier button
     public void setGraph() {
-
         if (xMaxText.getText() != null) {
             String text = xMaxText.getText().toString();
             graph.getViewport().setMinX(0);
             graph.getViewport().setMaxX(isInt(text));
         }
-
     }
 
-    public void scanAll(View view) throws InterruptedException {
+    // Scan all button
+    public void scanAll(final View view) throws InterruptedException {
         if (!running) {
             startTime = System.currentTimeMillis();
             startBluetooth();
@@ -325,14 +309,22 @@ public class allActivityGraphs extends AppCompatActivity {
                         @Override
                         public void run() {
                             getNetwork();
+                            startBluetooth(); // No need to wait for bluetooth to turn on just call
                             running = true;
-                            try {
-                                if (System.currentTimeMillis() - blueTime > 10000) {
-                                    blueList.clear();
-                                    startBluetooth();
+                            if (System.currentTimeMillis() - blueTime > 10000) {
+                                blueList.clear();
+                            }
+
+                            // Screen on fail-safe
+                            if (System.currentTimeMillis() - onTime > 3000 && !debug) {
+                                try {
+                                    if (getWindow().peekDecorView() != null) {
+                                        screenOn(getWindow().peekDecorView());
+                                        onTime = 0;
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
                                 }
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
                             }
                         }
                     });
@@ -342,6 +334,26 @@ public class allActivityGraphs extends AppCompatActivity {
         }
     }
 
+    // Bluetooth results method
+    public void startBluetooth() {
+        if (bluetoothAdapter != null) {
+            if (!bluetoothAdapter.isEnabled()) {
+                bluetoothAdapter.enable();
+            } else { // Second pass if not enabled to start with, always true
+                if (!bluetoothAdapter.isDiscovering()) {
+                    blueList.clear();
+                    IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+                    registerReceiver(bluereceiver, filter);
+                    bluetoothAdapter.startDiscovery();
+                }
+            }
+        } else {
+            int xVal = Math.round(System.currentTimeMillis() - startTime) / 1000;
+            blueSeries.appendData(new DataPoint(xVal, -119), true, 1000);
+        }
+    }
+
+    // Network results method
     public void getNetwork() {
         netList.clear();
         netTime = System.currentTimeMillis();
@@ -350,6 +362,7 @@ public class allActivityGraphs extends AppCompatActivity {
         }
     }
 
+    // Wifi results method
     private void startWifi() {
         wifiList.clear();
         if (wifiManager != null) {
@@ -361,6 +374,7 @@ public class allActivityGraphs extends AppCompatActivity {
         }
     }
 
+    // Return to original states if activity change
     public void onPause() {
         super.onPause();
         try {
@@ -408,6 +422,7 @@ public class allActivityGraphs extends AppCompatActivity {
         timer = new Timer();
     }
 
+    // Buttons
     public void goHome(View view) {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);

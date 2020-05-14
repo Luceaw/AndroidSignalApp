@@ -32,18 +32,26 @@ public class WifiActivity extends AppCompatActivity {
     private TextView wifiText;
     private TextView wifiExp;
 
+    // Broadcast receiver for Wifi scan results
     BroadcastReceiver wifiReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             wifiScanning = false;
-            List<ScanResult> results = wifiManager.getScanResults();
             unregisterReceiver(wifiReceiver);
+
+            List<ScanResult> results = wifiManager.getScanResults();
 
             String time_taken = (((System.currentTimeMillis() - startime) / 1000) + "s");
             Toast.makeText(context, "Received", Toast.LENGTH_SHORT).show();
 
             wifiText.setText(time_taken);
 
+            // Calculate and set total exposure
+            double[] result = new scannerAppTools().getMw(valList);
+            String exposure = ("~" + result[0] + " Sum dBm / ~" + result[1] + " nW");
+            wifiExp.setText(exposure);
+
+            // Update wifi list
             for (ScanResult scanResult : results) {
                 String name = scanResult.SSID;
                 if (name.length() > 8) {
@@ -56,9 +64,7 @@ public class WifiActivity extends AppCompatActivity {
                 valList.add((long) scanResult.level);
                 adapter.notifyDataSetChanged();
             }
-            double[] result = new scannerAppTools().getMw(valList);
-            String exposure = ("~" + result[0] + " Sum dBm / ~" + result[1] + " nW");
-            wifiExp.setText(exposure);
+
         }
     };
 
@@ -98,10 +104,12 @@ public class WifiActivity extends AppCompatActivity {
     }
 
     private void scanWifi() {
+        // Clear lists
         arrayList.clear();
         valList.clear();
         adapter.notifyDataSetChanged();
 
+        // Fail-safe
         if (System.currentTimeMillis() - startime > 10000) {
             wifiScanning = false;
         }
@@ -122,6 +130,8 @@ public class WifiActivity extends AppCompatActivity {
         }
     }
 
+
+    // Return Wifi to original state on change
     public void onPause() {
         super.onPause();
         if (wifiManager != null) {
@@ -135,7 +145,16 @@ public class WifiActivity extends AppCompatActivity {
                 }
             }
         }
+        if (wifiReceiver != null) {
+            try {
+                unregisterReceiver(wifiReceiver);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
+
+    // Buttons
 
     public void goHome(View view) {
         Intent intent = new Intent(this, MainActivity.class);
