@@ -18,6 +18,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class BluetoothActivity extends AppCompatActivity {
@@ -31,6 +32,7 @@ public class BluetoothActivity extends AppCompatActivity {
 
     private boolean blueStartOn;
     private boolean scanning;
+    private boolean hasPermission = true;
     int i = 0;
 
     // Broadcast receiver to Bluetooth Action Found; add results to list and update.
@@ -72,60 +74,71 @@ public class BluetoothActivity extends AppCompatActivity {
         mProgressBar = findViewById(R.id.progressBar);
         mProgressBar.setProgress(i);
 
+        // Check permissions
+        List<String> permissionsNeeded = new MainActivity().permissionsNeeded(this);
+        if(new MainActivity().missingPermissions(permissionsNeeded, this)) {
+            hasPermission = false;
+        }
     }
 
     public void scanBluetooth(View view) throws InterruptedException {
-        if (!scanning) {
-            scanning = true;
 
-            arrayList.clear();
-            blueList.clear();
-            adapter.notifyDataSetChanged();
+        // If app has permissions and start button already hasn't been pressed
+        if (hasPermission) {
+            if (!scanning) {
+                scanning = true;
 
-            if (bluetoothAdapter != null) {
-                // Check if Bluetooth is enabled and enable it if not.
-                if (!bluetoothAdapter.isEnabled()) {
-                    blueStartOn = false;
-                    bluetoothAdapter.enable();
-                    long start = System.currentTimeMillis();
-                    while ((System.currentTimeMillis() - start) < 3000 && (!bluetoothAdapter.isEnabled())) {
-                        Thread.sleep(50);
-                    }
-                    Thread.sleep(500);
-                } else {
-                    blueStartOn = true;
-                }
+                arrayList.clear();
+                blueList.clear();
+                adapter.notifyDataSetChanged();
 
-                // Set up receiver for finding finding a bluetooth device
-                IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-                registerReceiver(bluereceiver, filter);
-
-                bluetoothAdapter.startDiscovery();
-
-                // Progress bar
-                Toast.makeText(this, "Scanning Bluetooth", Toast.LENGTH_SHORT).show();
-                i = 0;
-                new CountDownTimer(5000, 100) {
-                    @Override
-                    public void onTick(long millisUntilFinished) {
-                        i++;
-                        int percent = i * 100 * 100 / 5000;
-                        mProgressBar.setProgress(percent);
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        i++;
-                        mProgressBar.setProgress(100);
-                        if (!blueStartOn) {
-                            scanning = false;
-                            bluetoothAdapter.disable();
+                if (bluetoothAdapter != null) {
+                    // Check if Bluetooth is enabled and enable it if not.
+                    if (!bluetoothAdapter.isEnabled()) {
+                        blueStartOn = false;
+                        bluetoothAdapter.enable();
+                        long start = System.currentTimeMillis();
+                        while ((System.currentTimeMillis() - start) < 3000 && (!bluetoothAdapter.isEnabled())) {
+                            Thread.sleep(50);
                         }
+                        Thread.sleep(500);
+                    } else {
+                        blueStartOn = true;
                     }
-                }.start();
-            } else {
-                Toast.makeText(this, "Bluetooth not supported", Toast.LENGTH_LONG).show();
+
+                    // Set up receiver for finding finding a bluetooth device
+                    IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+                    registerReceiver(bluereceiver, filter);
+
+                    bluetoothAdapter.startDiscovery();
+
+                    // Progress bar
+                    Toast.makeText(this, "Scanning Bluetooth", Toast.LENGTH_SHORT).show();
+                    i = 0;
+                    new CountDownTimer(5000, 100) {
+                        @Override
+                        public void onTick(long millisUntilFinished) {
+                            i++;
+                            int percent = i * 100 * 100 / 5000;
+                            mProgressBar.setProgress(percent);
+                        }
+
+                        @Override
+                        public void onFinish() {
+                            scanning = false;
+                            i++;
+                            mProgressBar.setProgress(100);
+                            if (!blueStartOn) {
+                                bluetoothAdapter.disable();
+                            }
+                        }
+                    }.start();
+                } else {
+                    Toast.makeText(this, "Bluetooth not supported", Toast.LENGTH_LONG).show();
+                }
             }
+        } else {
+            Toast.makeText(this, "Missing permissions!! Return to home to allow", Toast.LENGTH_SHORT).show();
         }
     }
 

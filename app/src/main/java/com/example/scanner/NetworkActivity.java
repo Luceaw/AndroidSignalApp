@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,6 +30,8 @@ public class NetworkActivity extends AppCompatActivity {
     private TextView timeTaken;
     private TextView exposurebox;
     private ArrayAdapter adapter;
+    private boolean hasPermission = true;
+
 
     // Cell In for Callback for retrieved results
     public TelephonyManager.CellInfoCallback cellInfoCallback = new TelephonyManager.CellInfoCallback() {
@@ -91,24 +94,36 @@ public class NetworkActivity extends AppCompatActivity {
         timeTaken = findViewById(R.id.timeText);
         exposurebox = findViewById(R.id.exposureBox);
 
+        // Check permissions
+        List<String> permissionsNeeded = new MainActivity().permissionsNeeded(this);
+        if(new MainActivity().missingPermissions(permissionsNeeded, this)) {
+            hasPermission = false;
+        }
+
     }
 
     public void scanNetworks(View view) {
-        // Does not actually scan so just retrieve the already-present results on a loop.
-        if (!running) {
-            TimerTask timerTask = new TimerTask() {
-                @Override
-                public void run() {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            getResults();
-                            running = true;
-                        }
-                    });
-                }
-            };
-            timer.schedule(timerTask, 0, 500);
+
+        // If app has permissions
+        if(hasPermission) {
+            // Does not actually scan so just retrieve the already-present results on a loop.
+            if (!running) {
+                TimerTask timerTask = new TimerTask() {
+                    @Override
+                    public void run() {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                getResults();
+                                running = true;
+                            }
+                        });
+                    }
+                };
+                timer.schedule(timerTask, 0, 500);
+            }
+        } else {
+            Toast.makeText(this, "Missing permissions!! Return to home to allow", Toast.LENGTH_SHORT).show();
         }
     }
 

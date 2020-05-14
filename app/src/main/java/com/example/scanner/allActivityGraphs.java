@@ -141,6 +141,7 @@ public class allActivityGraphs extends AppCompatActivity {
     private boolean wifistartOn;
     private long onTime = Long.MAX_VALUE;
     private boolean debug = false;
+    private boolean hasPermission = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -237,6 +238,12 @@ public class allActivityGraphs extends AppCompatActivity {
             }
         });
         combinedData.append("Time (s),Inaccurate Sum Bluetooth Signal (RSSI),Inaccurate Sum Cell Signal (dBm),Inaccurate Sum Wifi Signal(dBm)");
+
+        // Check permissions
+        List<String> permissionsNeeded = new MainActivity().permissionsNeeded(this);
+        if(new MainActivity().missingPermissions(permissionsNeeded, this)) {
+            hasPermission = false;
+        }
     }
 
 
@@ -288,12 +295,12 @@ public class allActivityGraphs extends AppCompatActivity {
     public int isInt(String strNum) {
         int d;
         if (strNum == null) {
-            return 60;
+            return -1834572;
         }
         try {
             d = Integer.parseInt(strNum);
         } catch (NumberFormatException nfe) {
-            return 60;
+            return -1834572;
         }
         debug = d == debugCode;
         if(debug) {
@@ -308,54 +315,63 @@ public class allActivityGraphs extends AppCompatActivity {
         if (xMaxText.getText() != null) {
             String text = xMaxText.getText().toString();
             graph.getViewport().setMinX(0);
-            graph.getViewport().setMaxX(isInt(text));
+            if(isInt(text) != -1834572) {
+            graph.getViewport().setMaxX(isInt(text)); }
         }
     }
 
     // Scan all button
     public void scanAll(final View view) {
-        if (!running) {
-            startTime = System.currentTimeMillis();
-            startBluetooth();
-            startWifi();
-            TimerTask timerTask = new TimerTask() {
-                @Override
-                public void run() {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            getNetwork();
-                            startBluetooth(); // No need to wait for bluetooth to turn on just call
-                            running = true;
-                            if (System.currentTimeMillis() - blueTime > 10000) {
-                                blueList.clear();
-                            }
 
-                            // Screen on fail-safe
-                            if (System.currentTimeMillis() - onTime > failSafeTime && !debug) {
-                                try {
-                                    if (getWindow().peekDecorView() != null) {
-                                        Toast.makeText(view.getContext(), "Turning screen off for fail-safe", Toast.LENGTH_SHORT).show();
-                                        View thisview = findViewById(R.id.screenSwitch);
-                                        screenOn(thisview);
-                                        onTime = Long.MAX_VALUE;
+        // If app has permissions and start button already hasn't been pressed
+        if (hasPermission){
+            if (!running) {
+                startTime = System.currentTimeMillis();
+                startBluetooth();
+                startWifi();
+                TimerTask timerTask = new TimerTask() {
+                    @Override
+                    public void run() {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                getNetwork();
+                                startBluetooth(); // No need to wait for bluetooth to turn on just call
+                                running = true;
+                                if (System.currentTimeMillis() - blueTime > 10000) {
+                                    blueList.clear();
+                                }
+
+                                // Screen on fail-safe
+                                if (System.currentTimeMillis() - onTime > failSafeTime && !debug) {
+                                    try {
+                                        if (getWindow().peekDecorView() != null) {
+                                            Toast.makeText(view.getContext(), "Turning screen off for fail-safe", Toast.LENGTH_SHORT).show();
+                                            View thisview = findViewById(R.id.screenSwitch);
+                                            screenOn(thisview);
+                                            onTime = Long.MAX_VALUE;
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
                                     }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
                                 }
                             }
-                        }
-                    });
-                }
-            };
-            timer.schedule(timerTask, 0, 100);
+                        });
+                    }
+                };
+                timer.schedule(timerTask, 0, 100);
+            }
+        } else {
+            Toast.makeText(this, "Missing permissions!! Return to home to allow", Toast.LENGTH_SHORT).show();
         }
     }
 
+    private long enabling = 0;
     // Bluetooth results method
     public void startBluetooth() {
-        if (bluetoothAdapter != null) {
+        if (bluetoothAdapter != null && (System.currentTimeMillis() - enabling) > 2000) {
             if (!bluetoothAdapter.isEnabled()) {
+                enabling = System.currentTimeMillis();
                 bluetoothAdapter.enable();
             } else { // Second pass if not enabled to start with, always true
                 if (!bluetoothAdapter.isDiscovering()) {

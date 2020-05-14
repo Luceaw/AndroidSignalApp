@@ -98,7 +98,7 @@ public class AllActivity extends AppCompatActivity {
                 time = (long) times.get(1);
                 double[] result = new scannerAppTools().getMw(netList);
                 changeSize(result[0], "networkBox");
-                String timeString = ((int) time + " s");
+                String timeString = ((int) time/1000 + " s");
                 String exposure = (result[0] + " Sum dBm / ~" + result[1] + " nW");
                 netExp.setText(exposure);
                 netText.setText(timeString);
@@ -110,6 +110,8 @@ public class AllActivity extends AppCompatActivity {
     private boolean running = false;
     private boolean blueStartOn;
     private boolean wifistartOn;
+
+    private boolean hasPermission = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,26 +147,39 @@ public class AllActivity extends AppCompatActivity {
         wifiText = findViewById(R.id.wifiTime);
         blueText = findViewById(R.id.blueTime);
         netText = findViewById(R.id.netTime);
+
+        // Check permissions
+        List<String> permissionsNeeded = new MainActivity().permissionsNeeded(this);
+        if(new MainActivity().missingPermissions(permissionsNeeded, this)) {
+            hasPermission = false;
+        }
+
     }
 
     // Main scan loop
     public void scanAll(View view) {
-        if (!running) {
-            startBluetooth();
-            startWifi();
-            TimerTask timerTask = new TimerTask() {
-                @Override
-                public void run() {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            getNetwork();
-                            running = true;
-                        }
-                    });
-                }
-            };
-            timer.schedule(timerTask, 0, 100);
+
+        // If app has permissions and start button already hasn't been pressed
+        if(hasPermission) {
+            if (!running) {
+                startBluetooth();
+                startWifi();
+                TimerTask timerTask = new TimerTask() {
+                    @Override
+                    public void run() {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                getNetwork();
+                                running = true;
+                            }
+                        });
+                    }
+                };
+                timer.schedule(timerTask, 0, 100);
+            }
+        } else {
+            Toast.makeText(this, "Missing permissions!! Return to home to allow", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -192,17 +207,21 @@ public class AllActivity extends AppCompatActivity {
         }
     }
 
+    private long enabling = 0;
     // Bluetooth results method
     public void startBluetooth() {
-        if (bluetoothAdapter != null) {
-            if (!bluetoothAdapter.isEnabled()) {
-                bluetoothAdapter.enable();
-            } else { // Second pass if not enabled to start with, always true
-                if (!bluetoothAdapter.isDiscovering()) {
-                    blueList.clear();
-                    IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-                    registerReceiver(bluereceiver, filter);
-                    bluetoothAdapter.startDiscovery();
+        if (bluetoothAdapter != null){
+            if((System.currentTimeMillis() - enabling) > 2000) {
+                if (!bluetoothAdapter.isEnabled()) {
+                    enabling = System.currentTimeMillis();
+                    bluetoothAdapter.enable();
+                } else { // Second pass if not enabled to start with, always true
+                    if (!bluetoothAdapter.isDiscovering()) {
+                        blueList.clear();
+                        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+                        registerReceiver(bluereceiver, filter);
+                        bluetoothAdapter.startDiscovery();
+                    }
                 }
             }
         } else {

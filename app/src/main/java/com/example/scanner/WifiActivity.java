@@ -31,6 +31,7 @@ public class WifiActivity extends AppCompatActivity {
     private boolean wifistart;
     private TextView wifiText;
     private TextView wifiExp;
+    private boolean hasPermission = true;
 
     // Broadcast receiver for Wifi scan results
     BroadcastReceiver wifiReceiver = new BroadcastReceiver() {
@@ -101,32 +102,45 @@ public class WifiActivity extends AppCompatActivity {
 
         adapter = new ArrayAdapter<>(this, R.layout.simple_list_item_1, arrayList);
         wifiList.setAdapter(adapter);
+
+        // Check permissions
+        List<String> permissionsNeeded = new MainActivity().permissionsNeeded(this);
+        if(new MainActivity().missingPermissions(permissionsNeeded, this)) {
+            hasPermission = false;
+        }
     }
 
     private void scanWifi() {
-        // Clear lists
-        arrayList.clear();
-        valList.clear();
-        adapter.notifyDataSetChanged();
 
-        // Fail-safe
-        if (System.currentTimeMillis() - startime > 10000) {
-            wifiScanning = false;
-        }
+        // If app has permissions and start button already hasn't been pressed
+        if(hasPermission) {
 
-        if (!wifiScanning) {
-            if (wifiManager != null) {
-                if (!wifiManager.isWifiEnabled()) {
-                    wifiManager.setWifiEnabled(true);
-                }
+            // Clear lists
+            arrayList.clear();
+            valList.clear();
+            adapter.notifyDataSetChanged();
 
-                registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-                if (wifiManager.startScan()) {
-                    wifiScanning = true;
-                    Toast.makeText(this, "Scanning wifi....", Toast.LENGTH_SHORT).show();
-                    startime = System.currentTimeMillis();
+            // Fail-safe
+            if (System.currentTimeMillis() - startime > 10000) {
+                wifiScanning = false;
+            }
+
+            if (!wifiScanning) {
+                if (wifiManager != null) {
+                    if (!wifiManager.isWifiEnabled()) {
+                        wifiManager.setWifiEnabled(true);
+                    }
+
+                    registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+                    if (wifiManager.startScan()) {
+                        wifiScanning = true;
+                        Toast.makeText(this, "Scanning wifi....", Toast.LENGTH_SHORT).show();
+                        startime = System.currentTimeMillis();
+                    }
                 }
             }
+        } else {
+            Toast.makeText(this, "Missing permissions!! Return to home to allow", Toast.LENGTH_SHORT).show();
         }
     }
 
