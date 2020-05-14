@@ -43,6 +43,13 @@ import java.util.TimerTask;
 
 public class allActivityGraphs extends AppCompatActivity {
 
+    // Hardcoded time to turn the screen off when the user sets the screen to stay on //
+
+    public long failSafeTime = 600000; // Time in ms equivalent to 10 minutes
+    public long debugCode = -543180579; // Debug code which allows extended screen on duration
+
+    // Just as a fail-safe //
+
     private ArrayList<Long> blueList = new ArrayList<>();
     long blueTime;
     long netTime;
@@ -132,7 +139,7 @@ public class allActivityGraphs extends AppCompatActivity {
     private EditText xMaxText;
     private GraphView graph;
     private boolean wifistartOn;
-    private long onTime = 0;
+    private long onTime = Long.MAX_VALUE;
     private boolean debug = false;
 
     @Override
@@ -229,7 +236,7 @@ public class allActivityGraphs extends AppCompatActivity {
                 setGraph();
             }
         });
-        combinedData.append("Time (s),Sum Bluetooth (RSSI),Sum Cell (dBm),Sum Wifi (dBm)");
+        combinedData.append("Time (s),Inaccurate Sum Bluetooth Signal (RSSI),Inaccurate Sum Cell Signal (dBm),Inaccurate Sum Wifi Signal(dBm)");
     }
 
 
@@ -237,8 +244,13 @@ public class allActivityGraphs extends AppCompatActivity {
     public void screenOn(View view) {
         if (screenSwitch != null) {
             if (screenSwitch.isChecked()) {
-                onTime = System.currentTimeMillis();
-                view.setKeepScreenOn(true);
+                if (System.currentTimeMillis() - onTime > failSafeTime && !debug) {
+                    view.setKeepScreenOn(false);
+                    screenSwitch.setChecked(false);
+                } else {
+                    onTime = System.currentTimeMillis();
+                    view.setKeepScreenOn(true);
+                }
             } else {
                 view.setKeepScreenOn(false);
             }
@@ -283,7 +295,11 @@ public class allActivityGraphs extends AppCompatActivity {
         } catch (NumberFormatException nfe) {
             return 60;
         }
-        debug = d == -1234;
+        debug = d == debugCode;
+        if(debug) {
+            Toast.makeText(this, "Screen will not be automatically turned off!",
+                    Toast.LENGTH_LONG).show();
+        }
         return d;
     }
 
@@ -297,7 +313,7 @@ public class allActivityGraphs extends AppCompatActivity {
     }
 
     // Scan all button
-    public void scanAll(final View view) throws InterruptedException {
+    public void scanAll(final View view) {
         if (!running) {
             startTime = System.currentTimeMillis();
             startBluetooth();
@@ -316,11 +332,13 @@ public class allActivityGraphs extends AppCompatActivity {
                             }
 
                             // Screen on fail-safe
-                            if (System.currentTimeMillis() - onTime > 3000 && !debug) {
+                            if (System.currentTimeMillis() - onTime > failSafeTime && !debug) {
                                 try {
                                     if (getWindow().peekDecorView() != null) {
-                                        screenOn(getWindow().peekDecorView());
-                                        onTime = 0;
+                                        Toast.makeText(view.getContext(), "Turning screen off for fail-safe", Toast.LENGTH_SHORT).show();
+                                        View thisview = findViewById(R.id.screenSwitch);
+                                        screenOn(thisview);
+                                        onTime = Long.MAX_VALUE;
                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -377,6 +395,14 @@ public class allActivityGraphs extends AppCompatActivity {
     // Return to original states if activity change
     public void onPause() {
         super.onPause();
+
+        DataPoint[] startAgain = new DataPoint[]{new DataPoint(-1, -121), new DataPoint(-0, -121)};
+
+        blueSeries.resetData(startAgain);
+        netSeries.resetData(startAgain);
+        netPointSeries.resetData(startAgain);
+        wifiSeries.resetData(startAgain);
+
         try {
             unregisterReceiver(bluereceiver);
         } catch (Exception e) {
