@@ -12,6 +12,7 @@
     <color name="trueBlack">#000000</color>
     <color name="greenishWhite">#EAFFD5</color>
     <color name="transparentwhite">#77FFFFFF</color>
+    <color name="splashwhite">#B6FFFFFF</color>
     <color name="listwhite">#21FFFFFF</color>
 
     <color name="home_green">#D7C1FF</color>

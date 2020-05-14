@@ -16,19 +16,28 @@
 
     <string name="home_button_text">Home</string>
 
-    <string name="splash_text">
-        <font fgcolor='#000000'>This app finds and displays signal strength information from Bluetooth, Cellular, Wifi networks that you phone can see.
+    <string name="splash_text"><font fgcolor='#000000'>This app finds and displays default signal strength information from Bluetooth, Cellular, Wifi networks.
         \nBehind the scenes network settings are accessed and altered -</font>
-        <font fgcolor='#ff0000'> therefore only use this app at your own risk and after understanding app notes below. \n</font>
-        <font fgcolor='#000000'> \nApp Notes:
-        \n-During scanning, bluetooth is turned on; after scanning bluetooth is turned off.</font>
-        <font fgcolor='#ff0000'> This app will therefore disconnect bluetooth devices;</font>
-        <font fgcolor='#000000'>additionally, only "discoverable" Bluetooth devices are found.</font>
-        <font fgcolor='#000000'>\n-Scanning only finds Cell networks linked to your SIM and therefore represents a fraction of true sum signal.
-        \n-During Wifi scanning, Wifi is repeatedly turned on and off to help get results quicker.</font>
-        <font fgcolor='#ff0000'>THIS WILL INTERRUPT ANY WIFI ACTIVITIES DURING TIME OF USE.</font>
+        <font fgcolor='#750002'> therefore only use this app at your own risk and after understanding app notes below. \n</font>
+        <font fgcolor='#009419'> \nApp Notes: </font>
+
+                    <font fgcolor='#490073'>\n-Networking information.</font>
+
+        <font fgcolor='#000000'>\n- Bluetooth is turned on for scanning and turned off afterwards.</font>
+        <font fgcolor='#750002'> This app can therefore disconnect Bluetooth devices;</font>
+        <font fgcolor='#000000'>only "discoverable" Bluetooth devices are found.</font>
+        <font fgcolor='#000000'>\n-Cell networks are only found for your SIM provider; airplane mode needs to be off for discovery.
+        \n-Wifi is turned on for scanning.</font>
+        <font fgcolor='#750002'>THIS CAN INTERRUPT WIFI ACTIVITIES DURING TIME OF USE.</font>
+                            <font fgcolor='#490073'>\n-Data from this app.</font>
         <font fgcolor='#000000'>\n-All signal strengths are</font>
-        <font fgcolor='#ff0000'>estimated and inaccurate.</font>
-        <font fgcolor='#000000'>\n-This app only works on newer phones.</font></string>
+        <font fgcolor='#750002'>estimated and inaccurate.</font>
+        <font fgcolor='#000000'>\n-This app only finds signals your phone has the ability to connect to
+        \n-This app only works on "newer" phones.</font>
+                            <font fgcolor='#490073'>\n-Use, your data and permissions.</font>
+        <font fgcolor='#000000'>\n-This app is for entertainment only; results are not valid.
+            \n-This app does not collect any data.
+        \n-This app needs networking and location permissions to get signal strength information.</font>
+    </string>
 
 </resources>
