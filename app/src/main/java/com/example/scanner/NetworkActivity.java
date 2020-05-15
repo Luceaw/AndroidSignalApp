@@ -31,6 +31,7 @@ public class NetworkActivity extends AppCompatActivity {
     private TextView exposurebox;
     private ArrayAdapter adapter;
     private boolean hasPermission = true;
+    private  ListView listView;
 
 
     // Cell In for Callback for retrieved results
@@ -38,6 +39,14 @@ public class NetworkActivity extends AppCompatActivity {
         @Override
         public void onCellInfo(@NonNull List<CellInfo> cellInfo) {
             long time;
+            adapter.notifyDataSetChanged();
+            adapter.notifyDataSetChanged();
+
+            arrayList.clear();
+            valList.clear();
+            adapter.notifyDataSetInvalidated();
+            adapter.notifyDataSetChanged();
+
             // Process results
             ArrayList[] dBms = new scannerAppTools().telephonyDBm(cellInfo);
             valList = dBms[0];
@@ -87,9 +96,10 @@ public class NetworkActivity extends AppCompatActivity {
         }
 
         arrayList.add("Press Retrieve to get results");
-        ListView listView = findViewById(R.id.networkList);
+        listView = findViewById(R.id.networkList);
         adapter = new ArrayAdapter<>(this, R.layout.simple_list_item_1, arrayList);
         listView.setAdapter(adapter);
+        listView.setEnabled(false);
 
         timeTaken = findViewById(R.id.timeText);
         exposurebox = findViewById(R.id.exposureBox);

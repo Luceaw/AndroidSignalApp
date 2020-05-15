@@ -26,7 +26,7 @@
         <font fgcolor='#000000'>\n- Bluetooth is turned on for scanning and turned off afterwards.</font>
         <font fgcolor='#750002'> This app can therefore disconnect Bluetooth devices;</font>
         <font fgcolor='#000000'>only "discoverable" Bluetooth devices are found.</font>
-        <font fgcolor='#000000'>\n-Cell networks are only found for your SIM provider; airplane mode needs to be off for discovery.
+        <font fgcolor='#000000'>\n-Cell networks are only found for your carrier; airplane mode needs to be off for discovery.
         \n-Wifi is turned on for scanning.</font>
         <font fgcolor='#750002'>THIS CAN INTERRUPT WIFI ACTIVITIES DURING TIME OF USE.</font>
                             <font fgcolor='#490073'>\n-Data from this app.</font>

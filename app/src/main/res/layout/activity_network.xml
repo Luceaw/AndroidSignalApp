@@ -57,7 +57,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.21" />
+        app:layout_constraintGuide_percent="0.18" />
 
 
     <androidx.constraintlayout.widget.Guideline
@@ -65,7 +65,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.58" />
+        app:layout_constraintGuide_percent="0.68" />
 
 
     <androidx.constraintlayout.widget.Guideline
@@ -101,13 +101,14 @@
         android:id="@+id/scanBtn"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@android:color/holo_orange_light"
+        android:background="@color/networkcol"
         android:gravity="center"
         android:onClick="scanNetworks"
         android:autoSizeMaxTextSize="20sp"
         android:autoSizeMinTextSize="12sp"
         android:autoSizeTextType="uniform"
-        android:text="Retrieve Cellular Signals (NOTE: ONLY FOR YOUR SIM)"
+        android:text="Retrieve Cell Signals from Your Carrier"
+        android:textAllCaps="false"
         app:layout_constraintBottom_toTopOf="@+id/buttombottom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/ScanTop" />
