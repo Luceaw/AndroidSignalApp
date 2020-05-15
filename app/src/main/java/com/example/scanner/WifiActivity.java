@@ -47,10 +47,6 @@ public class WifiActivity extends AppCompatActivity {
 
             wifiText.setText(time_taken);
 
-            // Calculate and set total exposure
-            double[] result = new scannerAppTools().getMw(valList);
-            String exposure = ("~" + result[0] + " Sum dBm / ~" + result[1] + " nW");
-            wifiExp.setText(exposure);
 
             // Update wifi list
             for (ScanResult scanResult : results) {
@@ -65,6 +61,11 @@ public class WifiActivity extends AppCompatActivity {
                 valList.add((long) scanResult.level);
                 adapter.notifyDataSetChanged();
             }
+
+            // Calculate and set total exposure
+            double[] result = new scannerAppTools().getMw(valList);
+            String exposure = ("~" + result[0] + " Sum dBm / ~" + result[1] + " nW");
+            wifiExp.setText(exposure);
 
         }
     };
