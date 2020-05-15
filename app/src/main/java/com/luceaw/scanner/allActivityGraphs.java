@@ -1,4 +1,4 @@
-package com.example.scanner;
+package com.luceaw.scanner;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -278,7 +278,7 @@ public class allActivityGraphs extends AppCompatActivity {
             // Export the file
             Context context = getApplicationContext();
             File savedfile = new File(getFilesDir(), filename);
-            Uri path = FileProvider.getUriForFile(context, "com.example.scanner.fileprovider", savedfile);
+            Uri path = FileProvider.getUriForFile(context, "com.luceaw.scanner.fileprovider", savedfile);
 
             Intent fileIntent = new Intent(Intent.ACTION_SEND);
             fileIntent.setType("text/csv");

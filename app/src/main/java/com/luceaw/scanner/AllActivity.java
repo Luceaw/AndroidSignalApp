@@ -1,4 +1,4 @@
-package com.example.scanner;
+package com.luceaw.scanner;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;

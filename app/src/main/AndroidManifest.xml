@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.scanner">
+    package="com.luceaw.scanner">
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
@@ -24,7 +24,7 @@
 
 
         <activity
-            android:name=".splash_activity"
+            android:name="com.luceaw.scanner.splash_activity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="Networking Signal Finder"
             android:noHistory="true"
@@ -35,28 +35,28 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".allActivityGraphs"
+            android:name="com.luceaw.scanner.allActivityGraphs"
             android:label="Sum of all signals" />
         <activity
-            android:name=".AllActivity"
+            android:name="com.luceaw.scanner.AllActivity"
             android:label="Sum of all signals" />
         <activity
-            android:name=".NetworkActivity"
+            android:name="com.luceaw.scanner.NetworkActivity"
             android:label="Scan Network" />
         <activity
-            android:name=".BluetoothActivity"
+            android:name="com.luceaw.scanner.BluetoothActivity"
             android:label="Scan Bluetooth" />
         <activity
-            android:name=".WifiActivity"
+            android:name="com.luceaw.scanner.WifiActivity"
             android:label="Scan WiFi" />
         <activity
-            android:name=".MainActivity"
+            android:name="com.luceaw.scanner.MainActivity"
             android:label="Home Page" />
-        <activity android:name=".scannerAppTools" />
+        <activity android:name="com.luceaw.scanner.scannerAppTools" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.example.scanner.fileprovider"
+            android:authorities="com.luceaw.scanner.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

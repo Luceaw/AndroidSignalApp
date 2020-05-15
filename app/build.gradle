@@ -5,7 +5,7 @@ android {
     buildToolsVersion "29.0.3"
 
     defaultConfig {
-        applicationId "com.example.scanner"
+        applicationId "com.luceaw.scanner"
         minSdkVersion 29
         targetSdkVersion 29
         versionCode 1

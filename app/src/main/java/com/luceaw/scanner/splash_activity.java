@@ -1,4 +1,4 @@
-package com.example.scanner;
+package com.luceaw.scanner;
 
 import android.content.Intent;
 import android.os.Bundle;
