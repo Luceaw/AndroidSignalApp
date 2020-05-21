@@ -1,5 +1,6 @@
 package com.luceaw.scanner;
 
+import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -15,6 +16,7 @@ import android.telephony.CellInfo;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.EditText;
@@ -101,11 +103,11 @@ public class allActivityGraphs extends AppCompatActivity {
 
             if (names.size() == netList.size() && netList.size() == status.size()
                     && times.size() > 0 && netList.size() > 0) {
-                time = (long) times.get(1);
+                time = (long) times.get(0);
                 double[] sums = new scannerAppTools().getMw(netList);
                 int yVal = (int) Math.round(sums[0]);
                 int xVal = Math.round(System.currentTimeMillis() - startTime) / 1000;
-                netSeries.appendData(new DataPoint(xVal, yVal), true, 4000);
+                netSeries.appendData(new DataPoint(xVal, yVal), true, 4000); // TODO: check timings
                 if (time < 101) {
                     netPointSeries.appendData(new DataPoint(xVal, yVal), true, 1000);
                     combinedData.append("\n").append(xVal).append(",,").append(yVal);
@@ -150,6 +152,8 @@ public class allActivityGraphs extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_graphs);
+
+        Thread.setDefaultUncaughtExceptionHandler(new TopExceptionHandler(this));
 
         try {
             Objects.requireNonNull(this.getSupportActionBar()).hide();
@@ -268,27 +272,38 @@ public class allActivityGraphs extends AppCompatActivity {
     public void exportData(View view) {
         try {
             // Append date-time to default file name
-            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy_HH:mm:ss", Locale.getDefault());
+            SimpleDateFormat formatter = new SimpleDateFormat("ddMMMyyyy_HH:mm:ss", Locale.getDefault());
             String date = formatter.format(new Date());
-            String filename = "Inaccurate_Signal_Data_" + date + ".csv";
-            FileOutputStream out = this.openFileOutput(filename, Context.MODE_PRIVATE);
+            String filename = getExternalFilesDir(null)+"/Networking_Wireless_Signal_Exposure_and_Display_Temp_File" + ".csv";
+            Log.v("Networking_Wireless_Signal_Exposure_and_Display_Deleter: todelete", new File(filename).getPath());
+
+            String title = "Inaccurate_Signal_Data_" + date + ".csv";
+
+            // Write to root
+            FileOutputStream out = new FileOutputStream(new File(filename));
             out.write(combinedData.toString().getBytes());
             out.close();
 
             // Export the file
             Context context = getApplicationContext();
-            File savedfile = new File(getFilesDir(), filename);
-            Uri path = FileProvider.getUriForFile(context, "com.luceaw.scanner.fileprovider", savedfile);
+            Uri path = FileProvider.getUriForFile(context, "com.luceaw.scanner.fileprovider", new File(filename));
 
             Intent fileIntent = new Intent(Intent.ACTION_SEND);
             fileIntent.setType("text/csv");
             fileIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             fileIntent.putExtra(Intent.EXTRA_STREAM, path);
-            fileIntent.putExtra(Intent.EXTRA_TITLE, filename);
-            startActivity(Intent.createChooser(fileIntent, "Export data"));
+            fileIntent.putExtra(Intent.EXTRA_TITLE, title);
+            fileIntent.putExtra(Intent.EXTRA_SUBJECT, title);
+
+            // Set receiver for action chosen
+            Intent receiver = new Intent(context, MyReceiver.class);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, receiver, PendingIntent.FLAG_UPDATE_CURRENT);
+            startActivity(Intent.createChooser(fileIntent, "Export data", pendingIntent.getIntentSender()));
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     // Check if user added int to graph x axis modifier; return value if true else set to default
@@ -404,7 +419,11 @@ public class allActivityGraphs extends AppCompatActivity {
                 wifiManager.setWifiEnabled(true);
             }
             registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-            wifiManager.startScan();
+            try{
+                wifiManager.startScan();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -413,7 +432,6 @@ public class allActivityGraphs extends AppCompatActivity {
         super.onPause();
 
         DataPoint[] startAgain = new DataPoint[]{new DataPoint(-1, -121), new DataPoint(-0, -121)};
-
         blueSeries.resetData(startAgain);
         netSeries.resetData(startAgain);
         netPointSeries.resetData(startAgain);
@@ -461,6 +479,11 @@ public class allActivityGraphs extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         running = false;
+        DataPoint[] startAgain = new DataPoint[]{new DataPoint(-1, -121), new DataPoint(-0, -121)};
+        blueSeries.resetData(startAgain);
+        netSeries.resetData(startAgain);
+        netPointSeries.resetData(startAgain);
+        wifiSeries.resetData(startAgain);
         timer = new Timer();
     }
 

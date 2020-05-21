@@ -58,7 +58,7 @@ public class NetworkActivity extends AppCompatActivity {
             if (names.size() == valList.size() && valList.size() == status.size()
                     && times.size() > 0 && valList.size() > 0) {
 
-                time = (long) times.get(1);
+                time = (long) times.get(0);
                 String string = (time + " ms");
                 timeTaken.setText(string);
 
@@ -86,6 +86,8 @@ public class NetworkActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Thread.setDefaultUncaughtExceptionHandler(new TopExceptionHandler(this));
+
         running = false;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_network);

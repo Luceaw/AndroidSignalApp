@@ -12,6 +12,9 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+
 
     <application
         android:allowBackup="true"
@@ -53,6 +56,8 @@
             android:name="com.luceaw.scanner.MainActivity"
             android:label="Home Page" />
         <activity android:name="com.luceaw.scanner.scannerAppTools" />
+        <activity android:name="com.luceaw.scanner.TopExceptionHandler" />
+        <receiver android:name="MyReceiver" android:exported="false"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"

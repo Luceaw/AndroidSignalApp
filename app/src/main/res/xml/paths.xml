@@ -1,5 +1,8 @@
 <paths>
-    <files-path
-        name="Data"
+    <external-path
+        name="external_files"
         path="." />
+    <root-path
+        name="external_files"
+        path="/storage/" />
 </paths>

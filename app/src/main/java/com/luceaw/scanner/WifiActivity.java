@@ -133,11 +133,10 @@ public class WifiActivity extends AppCompatActivity {
                     }
 
                     registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-                    if (wifiManager.startScan()) {
-                        wifiScanning = true;
-                        Toast.makeText(this, "Scanning wifi....", Toast.LENGTH_SHORT).show();
-                        startime = System.currentTimeMillis();
-                    }
+                    wifiManager.startScan();
+                    wifiScanning = true;
+                    Toast.makeText(this, "Scanning wifi....", Toast.LENGTH_SHORT).show();
+                    startime = System.currentTimeMillis();
                 }
             }
         } else {

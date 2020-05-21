@@ -95,7 +95,7 @@ public class AllActivity extends AppCompatActivity {
 
             if (names.size() == netList.size() && netList.size() == status.size()
                     && times.size() > 0 && netList.size() > 0) {
-                time = (long) times.get(1);
+                time = (long) times.get(0);
                 double[] result = new scannerAppTools().getMw(netList);
                 changeSize(result[0], "networkBox");
                 String timeString = ((int) time/1000 + " s");
@@ -119,6 +119,8 @@ public class AllActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all);
+        Thread.setDefaultUncaughtExceptionHandler(new TopExceptionHandler(this));
+
 
         try {
             Objects.requireNonNull(this.getSupportActionBar()).hide();
@@ -237,7 +239,11 @@ public class AllActivity extends AppCompatActivity {
                 wifiManager.setWifiEnabled(true);
             }
             registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-            wifiManager.startScan();
+             try{
+                wifiManager.startScan();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

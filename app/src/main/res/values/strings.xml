@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Scanner</string>
+    <string name="app_name">Networking_Signal_Exposure_and_Display</string>
 
     <string name="title_activity_splash_activity">splash_activity</string>
     <string name="dummy_button">Dummy Button</string>

@@ -65,6 +65,7 @@ public class BluetoothActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth);
+        Thread.setDefaultUncaughtExceptionHandler(new TopExceptionHandler(this));
 
         adapter = new ArrayAdapter<>(this, R.layout.simple_list_item_1, arrayList);
         ListView listView = findViewById(R.id.blueList);
