@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/trueBlack"
-    tools:context=".AllActivity">
+    android:weightSum="3"
+    tools:context=".CompassActivity">
+
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineBtn"
@@ -28,6 +30,29 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.75" />
 
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/compassBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.23" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/graphtop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.24" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/graphbottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.73" />
+
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/switchbottom"
         android:layout_width="wrap_content"
@@ -49,19 +74,6 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.23" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.94" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.98" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineTitle"
@@ -71,11 +83,32 @@
         app:layout_constraintGuide_percent="0.02" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineTitleBottom"
+        android:id="@+id/guidelineTitlebtm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.1" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/LegendTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.12" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/LegendBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.16" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/compassTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.17" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineheaderRight"
@@ -91,27 +124,6 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.84" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineHeader"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.12" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineHeaderbottom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.17" />
-
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineboxstart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.19" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/SignalHeaderRight"
@@ -130,207 +142,223 @@
 
     <TextView
         android:id="@+id/editText"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:autoSizeMaxTextSize="100sp"
         android:autoSizeMinTextSize="12sp"
         android:autoSizeTextType="uniform"
         android:gravity="center"
-        android:lines="2"
-        android:text="Scan all default networking \n Note: Bluetooth is turned on!"
+        android:text="Signal per Type over Phone Orientation "
         android:textColor="@color/text_blue1"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineTitleBottom"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineTitlebtm"
+        app:layout_constraintEnd_toStartOf="@+id/SignalHeaderRight"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guidelineTitle" />
 
-
-    <TextView
-        android:id="@+id/timeHeader"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:autoSizeMaxTextSize="100sp"
-        android:autoSizeMinTextSize="8sp"
-        android:autoSizeTextType="uniform"
+        android:layout_weight="0.7"
         android:gravity="center"
-        android:lines="2"
-        android:text="Results' Age"
-        android:textColor="@color/text_blue1"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineHeaderbottom"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineheaderRight"
-        app:layout_constraintStart_toStartOf="@+id/guidelineheaderLeft"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHeader" />
+        android:orientation="horizontal"
+        android:weightSum="5"
+        app:layout_constraintBottom_toTopOf="@+id/LegendBottom"
+        app:layout_constraintTop_toTopOf="@+id/LegendTop">
 
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:autoSizeMaxTextSize="100sp"
+            android:autoSizeMinTextSize="12sp"
+            android:autoSizeTextType="uniform"
+            android:gravity="center"
+            android:text="Legend:"
+            android:textColor="@color/text_blue1"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.1" />
+
+        <TextView
+            android:id="@+id/blueColName"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:autoSizeMaxTextSize="100sp"
+            android:autoSizeMinTextSize="12sp"
+            android:autoSizeTextType="uniform"
+            android:background="#0000FF"
+            android:gravity="center"
+            android:text=" B: Bluetooth "
+            android:textColor="@color/trueBlack"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.1" />
+
+        <TextView
+            android:id="@+id/netColName"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:autoSizeMaxTextSize="100sp"
+            android:autoSizeMinTextSize="12sp"
+            android:autoSizeTextType="uniform"
+            android:background="#FF00FF"
+            android:gravity="center"
+            android:text="           C: Cell            "
+            android:textColor="@color/trueBlack"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.1" />
+
+        <TextView
+            android:id="@+id/wifiColName"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:autoSizeMaxTextSize="100sp"
+            android:autoSizeMinTextSize="12sp"
+            android:autoSizeTextType="uniform"
+            android:background="#FFFF00"
+            android:gravity="center"
+            android:text="           W: Wifi            "
+            android:textColor="@color/trueBlack"
+            android:textStyle="bold" />
+
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/signalHeader"
+        android:id="@+id/compassLabel"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:autoSizeMaxTextSize="100sp"
-        android:autoSizeMinTextSize="8sp"
-        android:autoSizeTextType="uniform"
-        android:gravity="center"
-        android:lines="2"
-        android:text="Total Signal / \n Approx Power"
-        android:textColor="@color/text_blue1"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineHeaderbottom"
-        app:layout_constraintEnd_toStartOf="@+id/SignalHeaderRight"
-        app:layout_constraintStart_toStartOf="@+id/SignalHeaderLeft"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHeader" />
-
-    <TextView
-        android:id="@+id/blueTime"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:gravity="center"
-        android:lines="2"
-        android:textColor="@color/text_blue1"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/bluetoothBox"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineheaderRight"
-        app:layout_constraintStart_toStartOf="@+id/timeHeader"
-        app:layout_constraintTop_toTopOf="@+id/bluetoothBox" />
-
-    <TextView
-        android:id="@+id/netTime"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:gravity="center"
-        android:lines="2"
-        android:textColor="@color/text_blue1"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/networkBox"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineheaderRight"
-        app:layout_constraintStart_toStartOf="@+id/blueTime"
-        app:layout_constraintTop_toTopOf="@+id/networkBox" />
-
-    <TextView
-        android:id="@+id/wifiTime"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:gravity="center"
-        android:lines="2"
-        android:textColor="@color/text_blue1"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/wifiBox"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineheaderRight"
-        app:layout_constraintStart_toStartOf="@+id/netTime"
-        app:layout_constraintTop_toTopOf="@+id/wifiBox" />
-
-
-    <TextView
-        android:id="@+id/bluetoothBox"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:autoSizeMaxTextSize="100sp"
-        android:autoSizeMinTextSize="12sp"
-        android:autoSizeTextType="uniform"
-        android:background="@color/bluetoothcol"
-        android:gravity="center"
-        android:lines="2"
-        app:layout_constraintEnd_toStartOf="@+id/SignalHeaderRight"
-        app:layout_constraintStart_toStartOf="@+id/signalHeader"
-        app:layout_constraintTop_toTopOf="@+id/guidelineboxstart" />
-
-
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:gravity="center"
-        android:text="BT RSSI (inaccurate!): "
-        android:textColor="@color/text_blue1"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/bluetoothBox"
-        app:layout_constraintEnd_toStartOf="@+id/typeHeaderRight"
-        app:layout_constraintStart_toStartOf="@+id/guidelineleft"
-        app:layout_constraintTop_toTopOf="@+id/bluetoothBox" />
-
-    <TextView
-        android:id="@+id/networkBox"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="2dp"
-        android:autoSizeMaxTextSize="100sp"
-        android:autoSizeMinTextSize="12sp"
-        android:autoSizeTextType="uniform"
-        android:background="@color/networkcol"
-        android:gravity="center"
-        android:lines="2"
-        app:layout_constraintEnd_toEndOf="@+id/bluetoothBox"
-        app:layout_constraintStart_toStartOf="@+id/bluetoothBox"
-        app:layout_constraintTop_toBottomOf="@+id/bluetoothBox" />
-
-    <TextView
-        android:id="@+id/networkView"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:gravity="center"
-        android:text="Cell dBm / approx nW: "
-        android:textColor="@color/text_blue1"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/networkBox"
-        app:layout_constraintEnd_toStartOf="@+id/typeHeaderRight"
-        app:layout_constraintStart_toStartOf="@+id/textView3"
-        app:layout_constraintTop_toTopOf="@+id/networkBox" />
-
-    <TextView
-        android:id="@+id/wifiBox"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="2dp"
-        android:autoSizeMaxTextSize="100sp"
-        android:autoSizeMinTextSize="12sp"
-        android:autoSizeTextType="uniform"
-        android:background="@color/wificol"
-        android:gravity="center"
-        android:lines="2"
-        app:layout_constraintEnd_toEndOf="@+id/networkBox"
-        app:layout_constraintStart_toStartOf="@+id/networkBox"
-        app:layout_constraintTop_toBottomOf="@+id/networkBox" />
-
-    <TextView
-        android:id="@+id/wifiView"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:gravity="center"
-        android:text="Wifi dBm / approx nW: "
-        android:textColor="@color/text_blue1"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/wifiBox"
-        app:layout_constraintEnd_toStartOf="@+id/typeHeaderRight"
-        app:layout_constraintStart_toStartOf="@+id/networkView"
-        app:layout_constraintTop_toTopOf="@+id/wifiBox" />
-
-
-
-    <Button
-        android:id="@+id/switchLayout"
-        android:layout_width="158dp"
         android:layout_height="0dp"
         android:autoSizeMaxTextSize="100sp"
         android:autoSizeMinTextSize="12sp"
         android:autoSizeTextType="uniform"
         android:background="@color/transparentBlue"
-        android:lines="2"
+        android:gravity="center"
+        android:text="Compass Reading:"
+        android:textColor="@color/text_blue2"
+        app:layout_constraintBottom_toTopOf="@+id/compassBottom"
+        app:layout_constraintEnd_toStartOf="@+id/compassText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/compassTop" />
+
+    <TextView
+        android:id="@+id/compassText"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:autoSizeMaxTextSize="100sp"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeTextType="uniform"
+        android:gravity="start"
+        android:textColor="@color/text_white1"
+        app:layout_constraintBottom_toTopOf="@+id/compassBottom"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/compassLabel"
+        app:layout_constraintTop_toTopOf="@+id/compassTop" />
+
+    <ImageView
+        android:id="@+id/compassImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/LegendTop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/SignalHeaderRight"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/compass" />
+
+    <ImageView
+        android:id="@+id/compassArrow"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineTitlebtm"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/SignalHeaderRight"
+        app:layout_constraintTop_toTopOf="@+id/guidelineTitle"
+        app:srcCompat="@drawable/compass_arrow" />
+
+
+    <com.jjoe64.graphview.GraphView
+        android:id="@+id/graph"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/graphbottom"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/graphtop"
+        app:seriesColor="#ee0000"
+        app:seriesType="line" />
+
+    <Switch
+        android:id="@+id/screenSwitch"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:autoSizeMaxTextSize="100sp"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeTextType="uniform"
+        android:background="@color/screen_blue"
+        android:gravity="center"
+        android:onClick="screenOn"
+        android:text="Keep Screen On"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/switchbottom"
+        app:layout_constraintEnd_toStartOf="@+id/switchLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/switchtop" />
+
+
+    <Button
+        android:id="@+id/exportButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:autoSizeMaxTextSize="100sp"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeTextType="uniform"
+        android:background="@color/wificol"
+        android:gravity="center"
+        android:onClick="exportData"
+        android:text="Export the Inaccurate Data"
+        android:textAllCaps="false"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/switchbottom"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/switchLayout"
+        app:layout_constraintTop_toTopOf="@+id/switchtop" />
+
+    <Button
+        android:id="@+id/switchLayout"
+        android:layout_width="158dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:autoSizeMaxTextSize="100sp"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeTextType="uniform"
+        android:background="@color/transparentBlue"
         android:onClick="goSwitch"
-        android:text="Switch \n Layout"
+        android:text=" Switch \n Layout"
         android:textAllCaps="false"
         android:textColor="@color/text_blue2"
         app:layout_constraintBottom_toTopOf="@+id/switchbottom"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/switchtop" />
-
 
 
     <Button
         android:id="@+id/scanBtn"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_weight="1"
         android:autoSizeMaxTextSize="20sp"
         android:autoSizeMinTextSize="12sp"
         android:autoSizeTextType="uniform"
@@ -341,13 +369,23 @@
         android:textColor="@color/text_white1"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/guidelineBtn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guidelineBtnTop" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineBtnTop"
+        tools:layout_editor_absoluteX="132dp" />
 
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.94" />
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.98" />
 
     <LinearLayout
         android:id="@+id/navLayout"
@@ -446,10 +484,6 @@
             android:text=".    Wifi    ."
             android:textAllCaps="false" />
     </LinearLayout>
-
-
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

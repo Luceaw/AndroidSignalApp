@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -71,7 +70,7 @@
         android:background="@color/black_overlay"
         android:text="Networking Signal Detector App"
         android:textAlignment="center"
-        android:textColor="@color/shockinglypurple"
+        android:textColor="@color/text_white1"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/layouttop"
         app:layout_constraintEnd_toStartOf="@+id/titleright"
@@ -114,12 +113,9 @@
         app:layout_constraintEnd_toStartOf="@+id/titleright"
         app:layout_constraintStart_toStartOf="@+id/titleleft"
         app:layout_constraintTop_toTopOf="@+id/picbottom"
-
         android:autoSizeMaxTextSize="100sp"
         android:autoSizeMinTextSize="10sp"
-        android:autoSizeTextType="uniform"
-
-        />
+        android:autoSizeTextType="uniform" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

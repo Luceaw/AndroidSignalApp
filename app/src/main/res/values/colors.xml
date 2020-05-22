@@ -3,7 +3,7 @@
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
-    <color name="shockinglypurple">#f7f0ff</color>
+    <color name="text_white1">#f7f0ff</color>
 
     <color name="transparentBlue">#4A03DAC5</color>
 
@@ -15,7 +15,7 @@
     <color name="splashwhite">#B6FFFFFF</color>
     <color name="listwhite">#21FFFFFF</color>
 
-    <color name="home_green">#D7C1FF</color>
+    <color name="homecol">#D7C1FF</color>
     <color name="allcol">#B1112B2C</color>
     <color name="bluetoothcol">#95E7FF</color>
     <color name="networkcol">#FFC1F2</color>
@@ -24,17 +24,10 @@
     <color name="transparent_red_light">#4FF44336</color>
 
     <color name="red_100">#F44336</color>
-    <color name="red_300">#3F51B5</color>
     <color name="screen_blue">#4056D5</color>
-    <color name="red_500">#9C27B0</color>
-    <color name="red_700">#2196F3</color>
-    <color name="blue_100">#00BCD4</color>
-    <color name="blue_300">#7BAAF7</color>
-    <color name="blue_500">#009688</color>
-    <color name="blue_700">#3367D6</color>
-    <color name="green_100">#CDDC39</color>
-    <color name="green_300">#57BB8A</color>
-    <color name="green_500">#673AB7</color>
-    <color name="green_700">#0B8043</color>
+    <color name="text_blue1">#2196F3</color>
+    <color name="text_blue2">#00BCD4</color>
+    <color name="text_yellow">#CDDC39</color>
+
 
 </resources>

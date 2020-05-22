@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/trueBlack"
-
     tools:context=".NetworkActivity">
 
 
@@ -119,7 +118,7 @@
         android:layout_height="0dp"
         android:gravity="center"
         android:text="Age of Results: "
-        android:textColor="@color/red_700"
+        android:textColor="@color/text_blue1"
         android:textStyle="bold"
         android:autoSizeMaxTextSize="100sp"
         android:autoSizeMinTextSize="12sp"
@@ -134,7 +133,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:gravity="center"
-        android:textColor="@color/red_700"
+        android:textColor="@color/text_blue1"
         android:textStyle="bold"
         android:autoSizeMaxTextSize="100sp"
         android:autoSizeMinTextSize="12sp"
@@ -153,7 +152,7 @@
         android:autoSizeMaxTextSize="100sp"
         android:autoSizeMinTextSize="12sp"
         android:autoSizeTextType="uniform"
-        android:textColor="@color/red_700"
+        android:textColor="@color/text_blue1"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/ExposureBottom"
         app:layout_constraintEnd_toStartOf="@+id/Exposuremid"
@@ -167,7 +166,6 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@android:color/holo_red_light"
-
         android:gravity="center"
         android:lines="2"
         android:autoSizeMaxTextSize="100sp"
@@ -213,7 +211,7 @@
             android:autoSizeMaxTextSize="100sp"
             android:autoSizeMinTextSize="12sp"
             android:autoSizeTextType="uniform"
-            android:background="@color/home_green"
+            android:background="@color/homecol"
             android:onClick="goHome"
             android:text=".   Home   ."
             android:textAllCaps="false" />
@@ -227,16 +225,15 @@
             android:id="@+id/all_button"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-
             android:layout_weight="1"
             android:autoSizeMaxTextSize="100sp"
             android:autoSizeMinTextSize="12sp"
             android:autoSizeTextType="uniform"
             android:background="@color/allcol"
             android:onClick="goAll"
-            android:text=".   Total   ."
+            android:text=".    All    ."
             android:textAllCaps="false"
-            android:textColor="@color/blue_100" />
+            android:textColor="@color/text_blue2" />
 
         <TextView
             android:layout_width="0dp"
@@ -247,7 +244,6 @@
             android:id="@+id/bluetooth_button"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-
             android:layout_weight="1"
             android:autoSizeMaxTextSize="100sp"
             android:autoSizeMinTextSize="12sp"

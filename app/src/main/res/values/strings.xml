@@ -23,20 +23,21 @@
 
                     <font fgcolor='#490073'>\n-Networking information.</font>
 
-        <font fgcolor='#000000'>\n- Bluetooth is turned on for scanning and turned off afterwards.</font>
-        <font fgcolor='#750002'> This app can therefore disconnect Bluetooth devices;</font>
-        <font fgcolor='#000000'>only "discoverable" Bluetooth devices are found.</font>
+        <font fgcolor='#000000'>\n- Bluetooth is turned on for scanning.</font>
+        <font fgcolor='#750002'> This app can therefore interfere with Bluetooth connections; if the app crashes, Bluetooth maybe left on.</font>
+        <font fgcolor='#000000'>Only "discoverable" Bluetooth devices are found.</font>
         <font fgcolor='#000000'>\n-Cell networks are only found for your carrier; airplane mode needs to be off for discovery.
         \n-Wifi is turned on for scanning.</font>
         <font fgcolor='#750002'>THIS CAN INTERRUPT WIFI ACTIVITIES DURING TIME OF USE.</font>
                             <font fgcolor='#490073'>\n-Data from this app.</font>
         <font fgcolor='#000000'>\n-All signal strengths are</font>
         <font fgcolor='#750002'>estimated and inaccurate.</font>
-        <font fgcolor='#000000'>\n-This app only finds signals your phone has the ability to connect to
+        <font fgcolor='#000000'>\n-This app only finds signals your phone has the ability to connect to.
         \n-This app only works on "newer" phones.</font>
                             <font fgcolor='#490073'>\n-Use, your data and permissions.</font>
-        <font fgcolor='#000000'>\n-This app is for entertainment only; results are not valid.
-            \n-This app does not collect any data.
+        <font fgcolor='#000000'>\n-This app provides rough sensor reading estimates and is for entertainment only;
+            results are not valid or applicable for other purposes including commercial, research, reporting.
+            \n-This app does not export any data other than crash reports the user may choose to send; code is available on GitHub for transparency.
         \n-This app needs networking and location permissions to get signal strength information.</font>
     </string>
 

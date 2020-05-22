@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
-
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:background="@color/trueBlack"
-
     android:layout_height="match_parent"
     tools:context=".WifiActivity">
 
@@ -52,14 +50,12 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.93" />
 
-
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/listTop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.18" />
-
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/listBottom"
@@ -68,14 +64,12 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.68" />
 
-
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/ScanTop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.74" />
-
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/ScanBottom"
@@ -90,7 +84,6 @@
         android:layout_height="0dp"
         android:background="@color/listwhite"
         android:tooltipText="Routers found"
-
         app:layout_constraintBottom_toTopOf="@+id/listBottom"
         app:layout_constraintEnd_toStartOf="@+id/ExposureRight"
         app:layout_constraintStart_toStartOf="@+id/ExposureLeft"
@@ -115,7 +108,7 @@
         android:layout_height="0dp"
         android:gravity="center"
         android:text="Time taken for scan: "
-        android:textColor="@color/red_700"
+        android:textColor="@color/text_blue1"
         android:textStyle="bold"
         android:autoSizeMaxTextSize="100sp"
         android:autoSizeMinTextSize="12sp"
@@ -129,7 +122,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:gravity="center"
-        android:textColor="@color/red_700"
+        android:textColor="@color/text_blue1"
         android:textStyle="bold"
         android:autoSizeMaxTextSize="100sp"
         android:autoSizeMinTextSize="12sp"
@@ -145,7 +138,7 @@
         android:layout_height="0dp"
         android:gravity="center"
         android:text="Total Exposure: "
-        android:textColor="@color/red_700"
+        android:textColor="@color/text_blue1"
         android:textStyle="bold"
         android:autoSizeMaxTextSize="100sp"
         android:autoSizeMinTextSize="12sp"
@@ -160,7 +153,6 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@android:color/holo_red_light"
-
         android:gravity="center"
         android:lines="2"
         android:autoSizeMaxTextSize="100sp"
@@ -204,7 +196,7 @@
             android:autoSizeMaxTextSize="100sp"
             android:autoSizeMinTextSize="12sp"
             android:autoSizeTextType="uniform"
-            android:background="@color/home_green"
+            android:background="@color/homecol"
             android:onClick="goHome"
             android:text=".   Home   ."
             android:textAllCaps="false" />
@@ -218,16 +210,15 @@
             android:id="@+id/all_button"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-
             android:layout_weight="1"
             android:autoSizeMaxTextSize="100sp"
             android:autoSizeMinTextSize="12sp"
             android:autoSizeTextType="uniform"
             android:background="@color/allcol"
             android:onClick="goAll"
-            android:text=".   Total   ."
+            android:text=".    All    ."
             android:textAllCaps="false"
-            android:textColor="@color/blue_100" />
+            android:textColor="@color/text_blue2" />
 
         <TextView
             android:layout_width="0dp"
@@ -238,7 +229,6 @@
             android:id="@+id/bluetooth_button"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-
             android:layout_weight="1"
             android:autoSizeMaxTextSize="100sp"
             android:autoSizeMinTextSize="12sp"

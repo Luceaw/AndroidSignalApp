@@ -135,8 +135,8 @@
         android:autoSizeMinTextSize="12sp"
         android:autoSizeTextType="uniform"
         android:gravity="center"
-        android:text="     Signal Per Type    "
-        android:textColor="@color/red_700"
+        android:text="   Sum Signal per Type over Time  "
+        android:textColor="@color/text_blue1"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/guidelineTitlebtm"
         app:layout_constraintEnd_toEndOf="parent"
@@ -152,7 +152,6 @@
         android:orientation="horizontal"
         android:weightSum="5"
         app:layout_constraintBottom_toTopOf="@+id/LegendBottom"
-
         app:layout_constraintTop_toTopOf="@+id/LegendTop">
 
         <TextView
@@ -164,7 +163,7 @@
             android:autoSizeTextType="uniform"
             android:gravity="center"
             android:text="Legend:"
-            android:textColor="@color/red_700"
+            android:textColor="@color/text_blue1"
             android:textStyle="bold" />
 
         <TextView
@@ -199,7 +198,6 @@
             android:autoSizeMaxTextSize="100sp"
             android:autoSizeMinTextSize="12sp"
             android:autoSizeTextType="uniform"
-
             android:background="#FF00FF"
             android:gravity="center"
             android:text="           C: Cell            "
@@ -219,7 +217,6 @@
             android:autoSizeMaxTextSize="100sp"
             android:autoSizeMinTextSize="12sp"
             android:autoSizeTextType="uniform"
-
             android:background="#FFFF00"
             android:gravity="center"
             android:text="           W: Wifi            "
@@ -231,7 +228,6 @@
 
     <com.jjoe64.graphview.GraphView
         android:id="@+id/graph"
-
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/graphbottom"
@@ -265,7 +261,7 @@
         android:autoSizeMaxTextSize="100sp"
         android:autoSizeMinTextSize="12sp"
         android:autoSizeTextType="uniform"
-        android:background="@color/green_700"
+        android:background="@color/wificol"
         android:gravity="center"
         android:onClick="exportData"
         android:text="Export the Inaccurate Data"
@@ -288,7 +284,7 @@
         android:onClick="goSwitch"
         android:text=" Switch \n Layout"
         android:textAllCaps="false"
-        android:textColor="@color/blue_100"
+        android:textColor="@color/text_blue2"
         app:layout_constraintBottom_toTopOf="@+id/switchbottom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -307,7 +303,7 @@
         android:gravity="center"
         android:onClick="scanAll"
         android:text="Start Retrieving Data"
-        android:textColor="@color/shockinglypurple"
+        android:textColor="@color/text_white1"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/guidelineBtn"
         app:layout_constraintTop_toTopOf="@+id/guidelineBtnTop"
@@ -347,7 +343,7 @@
             android:autoSizeMaxTextSize="100sp"
             android:autoSizeMinTextSize="12sp"
             android:autoSizeTextType="uniform"
-            android:background="@color/home_green"
+            android:background="@color/homecol"
             android:onClick="goHome"
             android:text=".   Home   ."
             android:textAllCaps="false" />
@@ -361,16 +357,15 @@
             android:id="@+id/all_button"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-
             android:layout_weight="1"
             android:autoSizeMaxTextSize="100sp"
             android:autoSizeMinTextSize="12sp"
             android:autoSizeTextType="uniform"
             android:background="@color/allcol"
             android:onClick="goAll"
-            android:text=".   Total   ."
+            android:text=".    All    ."
             android:textAllCaps="false"
-            android:textColor="@color/blue_100" />
+            android:textColor="@color/text_blue2" />
 
         <TextView
             android:layout_width="0dp"
@@ -381,7 +376,6 @@
             android:id="@+id/bluetooth_button"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-
             android:layout_weight="1"
             android:autoSizeMaxTextSize="100sp"
             android:autoSizeMinTextSize="12sp"
@@ -439,7 +433,7 @@
         android:gravity="center"
         android:padding="5dp"
         android:text="60"
-        android:textColor="@color/green_100"
+        android:textColor="@color/text_yellow"
         app:layout_constraintBottom_toTopOf="@+id/switchtop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/exportButton"
@@ -457,7 +451,7 @@
         android:maxLines="1"
         android:padding="3dp"
         android:text="Graph X Axis Max (s):"
-        android:textColor="@color/green_100"
+        android:textColor="@color/text_yellow"
         app:layout_constraintBottom_toTopOf="@+id/switchtop"
         app:layout_constraintEnd_toStartOf="@+id/graphMax"
         app:layout_constraintStart_toEndOf="@+id/screenSwitch"

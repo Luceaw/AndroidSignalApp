@@ -81,6 +81,7 @@ public class WifiActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wifi);
+        Thread.setDefaultUncaughtExceptionHandler(new TopExceptionHandler(this));
 
         try {
             Objects.requireNonNull(this.getSupportActionBar()).hide();
@@ -94,12 +95,7 @@ public class WifiActivity extends AppCompatActivity {
         arrayList.add("Press Scan to get results");
 
         Button buttonScan = findViewById(R.id.scanBtn);
-        buttonScan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                scanWifi();
-            }
-        });
+        buttonScan.setOnClickListener(view -> scanWifi());
 
         adapter = new ArrayAdapter<>(this, R.layout.simple_list_item_1, arrayList);
         wifiList.setAdapter(adapter);
